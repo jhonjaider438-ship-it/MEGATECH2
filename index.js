@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 import { conectaDB, supabase } from './config/supabase.js';
 import authRoutes from './routes/auth.js';
 import { version } from 'node:os';
+import categoriasRoutes from './routes/categorias.js';
+import subcategoriasRoutes from "./routes/sub_categorias.js";
+import productosRouter from "./routes/productos.js";
 
 // cargar las variables de entorno
 dotenv.config();
@@ -22,6 +25,10 @@ app.get('/',(req,res)=>{
         version : '1.0.0'
     });
 });
+//ruta de autenticacion
+app.use('/categorias', categoriasRoutes);
+app.use('/subcategorias', subcategoriasRoutes);
+app.use('/productos', productosRouter); 
 
 // configuramos el puerto
 const PORT = 3000;
