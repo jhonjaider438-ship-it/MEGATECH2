@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { conectaDB, supabase } from './config/supabase.js';
 import authRoutes from './routes/auth.js';
 import { version } from 'node:os';
+import userRoutes from './routes/usuarios.js'
 
 // cargar las variables de entorno
 dotenv.config();
@@ -22,6 +23,9 @@ app.get('/',(req,res)=>{
         version : '1.0.0'
     });
 });
+
+// rutas del crud de usuario
+app.use('/usuario', userRoutes);
 
 // configuramos el puerto
 const PORT = 3000;
