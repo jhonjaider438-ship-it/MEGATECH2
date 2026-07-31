@@ -11,6 +11,10 @@ export const obteneruser = async (req, res) => {
                 error: error.message
             });
         }
+        return res.status(200).json({
+            usuarios: data
+        });
+
     } catch (error) {
         console.error('Error al obtener usuarios', error);
         return res.status(500).json({

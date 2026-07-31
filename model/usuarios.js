@@ -12,7 +12,7 @@ export const UserModel = {
 export const crearuser = async (cedula,nombre,apellido,telefono,correo,contraseña) => {
     const {data,error} = await supabase
     .from('usuarios')
-    .insert([{cedula,nombre,apellido,telefono,correo,contraseña}])
+    .insert([{cedula,nombre,apellido,telefono,correo,contraseña,rol}])
     .select();
     return {data,error};
 };
@@ -44,7 +44,7 @@ export const actualizar = async (id, campos) => {
     .from('usuarios')
     .update(campos)
     .eq ('id', id)
-    .select('cedula,nombre,apellido,telefono,correo,contraseña');
+    .select('cedula,nombre,apellido,telefono,correo,contraseña,rol');
     return {data,error};
 };
 
