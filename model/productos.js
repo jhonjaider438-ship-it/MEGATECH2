@@ -1,5 +1,18 @@
 import { supabase } from "../config/supabase.js";
 
+// Actualizar stock del producto
+export const actualizarStock = async (id, nuevoStock) => {
+
+    return await supabase
+        .from("productos")
+        .update({
+            stock: nuevoStock
+        })
+        .eq("id", id)
+        .select();
+
+};
+
 // Obtener todos los productos
 export const obtenerProductos = async () => {
     return await supabase

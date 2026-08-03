@@ -1,7 +1,9 @@
 import { obtenerPedidos,obtenerPedidoPorId,crearPedido,actualizarPedido,eliminarPedido } from "../model/pedidos.js";
 import { porid as UserModel } from "../model/usuarios.js";
 import {crearDetalle} from "../model/detalle_pedido.js";
+import { actualizarStock } from "../model/productos.js";
 import {enviarconfirmacionpedido} from "../utils/sendemail.js";
+import { supabase } from "../config/supabase.js";
 
 
 // Obtener todos
@@ -32,26 +34,64 @@ export const obtenerPorId = async (req, res) => {
 };
 
 
-// Crear pedido
 export const crear = async (req, res) => {
 
     const { estado, total, id_cliente, productos } = req.body;
 
-     if (!productos || productos.length === 0) {
+
+    if (!productos || productos.length === 0) {
         return res.status(400).json({
             mensaje:"Debe enviar productos"
         });
     }
 
+
+    // Validar stock antes de crear pedido
+
+    for (const producto of productos) {
+
+
+        const { data: productoActual, error } = await supabase
+            .from("productos")
+            .select("stock")
+            .eq("id", producto.id_producto)
+            .single();
+
+
+
+        if(error){
+            return res.status(500).json(error);
+        }
+
+
+
+        // Verificar si hay suficiente stock
+
+        if(productoActual.stock < producto.cantidad){
+
+            return res.status(400).json({
+                mensaje:`No hay suficiente stock para el producto ${producto.id_producto}`
+            });
+
+        }
+
+    }
+
+
+
+    // Calcular total
+
     const totalCalculado = productos.reduce(
-    (total, producto) => 
-        total + (producto.cantidad * producto.precio_unitario),
-    0
-);
+        (total, producto) => 
+            total + (producto.cantidad * producto.precio_unitario),
+        0
+    );
+
+
 
     // Crear pedido
 
-   const { data: pedido, error } = await crearPedido({
+    const { data: pedido, error } = await crearPedido({
 
         fecha: new Date(),
 
@@ -64,26 +104,37 @@ export const crear = async (req, res) => {
     });
 
 
-    if (error) {
+
+    if(error){
         return res.status(500).json(error);
     }
 
-    // id del pedido creado
+
 
     const idPedido = pedido[0].id;
 
+
+
+    // Crear detalle pedido
+
     const detalles = productos.map(producto => ({
-        id_pedido: idPedido,
-        id_producto: producto.id_producto,
-        cantidad: producto.cantidad,
-        precio_unitario: producto.precio_unitario,
-        subtotal: producto.cantidad * producto.precio_unitario
+
+        id_pedido:idPedido,
+
+        id_producto:producto.id_producto,
+
+        cantidad:producto.cantidad,
+
+        precio_unitario:producto.precio_unitario,
+
+        subtotal:producto.cantidad * producto.precio_unitario
+
     }));
 
 
-    // Obtener información del cliente
 
-    const { data: detalle, error: errorDetalle} = await crearDetalle(detalles);
+    const { data: detalle, error:errorDetalle } = await crearDetalle(detalles);
+
 
 
     if(errorDetalle){
@@ -94,6 +145,35 @@ export const crear = async (req, res) => {
         });
 
     }
+
+
+
+    // Descontar stock
+
+    for (const producto of productos) {
+
+
+        const { data: productoActual } = await supabase
+            .from("productos")
+            .select("stock")
+            .eq("id", producto.id_producto)
+            .single();
+
+
+
+        const nuevoStock = productoActual.stock - producto.cantidad;
+
+
+
+        await actualizarStock(
+            producto.id_producto,
+            nuevoStock
+        );
+
+    }
+
+
+
     res.status(201).json({
 
         mensaje:"Pedido y detalle creados correctamente",
