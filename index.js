@@ -35,7 +35,7 @@ app.use('/productos', productosRouter);
 app.use('/usuario', userRoutes);
 
 // rutas de el registro y del login
-app.use('/aute', authRoutes)
+app.use('/auth', authRoutes)
 
 // configuramos el puerto
 const PORT = 3000;
