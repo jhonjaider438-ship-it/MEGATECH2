@@ -7,6 +7,8 @@ import userRoutes from './routes/usuarios.js'
 import categoriasRoutes from './routes/categorias.js';
 import subcategoriasRoutes from "./routes/sub_categorias.js";
 import productosRouter from "./routes/productos.js";
+import pedidosRouter from './routes/pedidos.js';
+import detallePedidoRouter from './routes/detalle_pedido.js';
 
 // cargar las variables de entorno
 dotenv.config();
@@ -27,14 +29,26 @@ app.get('/',(req,res)=>{
     });
 });
 //ruta de autenticacion
+
+// rutas de categorias
 app.use('/categorias', categoriasRoutes);
+// rutas de subcategorias
 app.use('/subcategorias', subcategoriasRoutes);
+// rutas de productos
 app.use('/productos', productosRouter); 
+//rutas de pedidos
+app.use('/pedidos', pedidosRouter);
+// rutas de detalle de pedidos
+app.use('/detalle_pedido', detallePedidoRouter);
 
 // rutas del crud de usuario
 app.use('/usuario', userRoutes);
 
+<<<<<<< HEAD
 // rutas de el registro y del login y recuperar contraseña
+=======
+// rutas de el registro y del login
+>>>>>>> api-yeison
 app.use('/auth', authRoutes)
 
 // configuramos el puerto

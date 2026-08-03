@@ -153,6 +153,7 @@ Equipo de Soporte - Megatech2
         console.error('Error enviando el email de confirmación:', error);
         return { success: false, error: error.message };
     }
+<<<<<<< HEAD
 };
 
 export const enviarAlertaStock = async (correo, nombre, producto, stock, descripcion) => {
@@ -316,3 +317,6 @@ Equipo de Soporte - Megatech2
 `
     });
 }
+=======
+};
+>>>>>>> api-yeison
