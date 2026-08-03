@@ -1,4 +1,6 @@
 import {obtenerProductos,obtenerProductoPorId,crearProducto,actualizarProducto,eliminarProducto } from "../model/productos.js";
+import { obtenerAdminsYEmpleados } from "../model/usuarios.js";
+import { enviarAlertaStock } from '../utils/sendemail.js';
 
 // GET
 export const listarProductos = async (req, res) => {
@@ -45,6 +47,9 @@ export const actualizar = async (req, res) => {
         return res.status(400).json({ error: error.message });
     }
 
+    // Verificar si el producto quedó con poco stock
+    await verificarStock(data);
+
     res.json(data);
 };
 
@@ -62,3 +67,25 @@ export const eliminar = async (req, res) => {
         mensaje: "Producto eliminado correctamente"
     });
 };
+
+export const verificarStock = async (producto) => {
+
+    if (producto.stock <= 5) {
+
+        const { data: usuarios } = await obtenerAdminsYEmpleados();
+
+        for (const usuario of usuarios) {
+
+            await enviarAlertaStock(
+                usuario.correo,
+                usuario.nombre,
+                producto.nombre,
+                producto.stock,
+                producto.descripcion
+            );
+
+        }
+
+    }
+
+}

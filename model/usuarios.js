@@ -9,7 +9,7 @@ export const UserModel = {
 };
 
 // crear nuevo usuario
-export const crearuser = async (cedula,nombre,apellido,telefono,correo,contraseña) => {
+export const crearuser = async (cedula,nombre,apellido,telefono,correo,contraseña,rol) => {
     const {data,error} = await supabase
     .from('usuarios')
     .insert([{cedula,nombre,apellido,telefono,correo,contraseña,rol}])
@@ -56,4 +56,14 @@ export const eliminar = async (id) => {
     .eq('id', id)
     .select();
     return {data,error};
+};
+
+// obtener todos los empleados y admins
+export const obtenerAdminsYEmpleados = async () => {
+    const { data, error } = await supabase
+        .from("usuarios")
+        .select("nombre, correo")
+        .in("rol", ["Admin", "Empleado"]);
+
+    return { data, error };
 };

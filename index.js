@@ -34,7 +34,7 @@ app.use('/productos', productosRouter);
 // rutas del crud de usuario
 app.use('/usuario', userRoutes);
 
-// rutas de el registro y del login
+// rutas de el registro y del login y recuperar contraseña
 app.use('/auth', authRoutes)
 
 // configuramos el puerto

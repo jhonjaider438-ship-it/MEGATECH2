@@ -1,4 +1,4 @@
-import { codigorecupera, marcarCodigoComoUsado, codigovalido, obtenerCodigoValido } from "../model/recuperar.js";
+import { codigorecupera, marcarCodigoComoUsado, obtenerCodigoValido } from "../model/recuperar.js";
 import { obtenercorreo, actualizar } from "../model/usuarios.js";
 import nodemailer from 'nodemailer';
 import bcrypt from "bcryptjs";
@@ -37,7 +37,7 @@ export const enviarcorreo = async (req, res) => {
         // creamos el email del codigo
         await transportes.sendMail({
             from: process.env.EMAIL_USER,
-            to: email,
+            to: correo,
             subject: `tu codigo de recuperacion es: ${codigo}`,
             html: `
     <!DOCTYPE html>
@@ -200,9 +200,9 @@ export const  verificode = async  (req, res) => {
         await marcarCodigoComoUsado(codigorecupera.id);
 
         // respondeos al cliemte que la contraseña se cambio correctamente
-        await transporte.sendMail({
+        await transportes.sendMail({
             from: process.env.EMAIL_USER,
-            to: email,
+            to: correo,
             subject: 'Contraseña actualizada correctamente',
             html: `
 <!DOCTYPE html>

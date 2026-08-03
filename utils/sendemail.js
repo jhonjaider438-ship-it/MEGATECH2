@@ -11,11 +11,11 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-export const enviarconfirmacionpedido = async (email, nombre, pedidoid, total) => {
+export const enviarconfirmacionpedido = async (correo, nombre, pedidoid, total) => {
     const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: email,
-        subject: `👍 Pedido confirmado - Heladería Minions #${pedidoid}`,
+        to: correo,
+        subject: `👍 Pedido confirmado #${pedidoid}`,
         html: `
 <!DOCTYPE html>
 <html lang="es">
@@ -154,3 +154,165 @@ Equipo de Soporte - Megatech2
         return { success: false, error: error.message };
     }
 };
+
+export const enviarAlertaStock = async (correo, nombre, producto, stock, descripcion) => {
+    await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: correo,
+        subject: "⚠ Alerta de inventario",
+        html: `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+</head>
+
+<body style="margin:0;padding:0;background:#0b1728;font-family:Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:30px 0;">
+<tr>
+<td align="center">
+
+<table width="450" cellpadding="0" cellspacing="0"
+style="background:#10243f;border-radius:20px;border:2px solid #1da1f2;color:white;overflow:hidden;">
+
+<tr>
+<td style="background:#0d1c31;padding:20px;text-align:center;border-bottom:2px solid #1da1f2;">
+
+<h1 style="margin:0;color:#29b6f6;">
+Megatech2
+</h1>
+
+<p style="margin-top:8px;color:#b9dfff;">
+Alerta de Inventario
+</p>
+
+</td>
+</tr>
+
+<tr>
+<td style="padding:30px;">
+
+<p style="font-size:18px;">
+Hola <strong>${nombre}</strong>,
+</p>
+
+<p style="color:#d8e9ff;line-height:25px;">
+El sistema ha detectado que uno de los productos del inventario ha alcanzado un nivel bajo de existencias.
+</p>
+
+<div style="
+background:#0d1c31;
+border:2px solid #ff9800;
+border-radius:15px;
+padding:20px;
+margin:25px 0;">
+
+<div style="text-align:center;font-size:48px;">⚠️</div>
+
+<h2 style="
+text-align:center;
+color:#ff9800;
+margin:10px 0 20px;">
+Stock Bajo
+</h2>
+
+<table width="100%" style="color:white;font-size:16px;">
+
+<tr>
+<td><strong>Producto:</strong></td>
+<td style="text-align:right;color:#29b6f6;">
+${producto}
+</td>
+</tr>
+
+<tr>
+<td style="padding-top:12px;">
+<strong>Descripción:</strong>
+</td>
+
+<td style="
+padding-top:12px;
+text-align:right;
+color:#d8e9ff;">
+${descripcion}
+</td>
+
+</tr>
+
+<tr>
+<td style="padding-top:12px;">
+<strong>Unidades disponibles:</strong>
+</td>
+
+<td style="
+padding-top:12px;
+text-align:right;
+color:#ff4d4d;
+font-size:18px;
+font-weight:bold;">
+${stock}
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div style="
+margin-top:20px;
+padding:15px;
+background:#0b1728;
+border-left:5px solid #35e27b;
+border-radius:8px;">
+
+<strong style="color:#35e27b;">
+📦 Acción recomendada
+</strong>
+
+<p style="margin:8px 0 0;color:#d8e9ff;">
+Se recomienda abastecer este producto lo antes posible para evitar quedarse sin existencias y garantizar la disponibilidad para los clientes.
+</p>
+
+</div>
+
+<p style="margin-top:30px;color:#d8e9ff;">
+Este es un mensaje generado automáticamente por el sistema de inventario.
+</p>
+
+</td>
+</tr>
+
+<tr>
+<td style="
+background:#0d1c31;
+padding:18px;
+text-align:center;
+font-size:13px;
+color:#9fb8d6;">
+
+Atentamente,<br>
+
+<strong style="color:#29b6f6;">
+Equipo de Soporte - Megatech2
+</strong>
+
+<br><br>
+
+© 2026 Megatech2 - Sistema de Gestión de Inventario - Tienda Tecnológica
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
+`
+    });
+}
