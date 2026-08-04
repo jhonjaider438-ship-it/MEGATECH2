@@ -7,7 +7,7 @@ export const obteneruser = async (req, res) => {
     try {
         const {data, error} = await UserModel.obtenertodos();
         if (error) {
-            return res.status(500),json({
+            return res.status(500).json({
                 error: error.message
             });
         }
@@ -86,7 +86,7 @@ export const eliminaruser = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('error al eliminar usario', errror);
+        console.error('error al eliminar usario', error);
         return res.status(500).json({
             error: error.message
         });

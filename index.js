@@ -44,11 +44,7 @@ app.use('/detalle_pedido', detallePedidoRouter);
 // rutas del crud de usuario
 app.use('/usuario', userRoutes);
 
-<<<<<<< HEAD
 // rutas de el registro y del login y recuperar contraseña
-=======
-// rutas de el registro y del login
->>>>>>> api-yeison
 app.use('/auth', authRoutes)
 
 // configuramos el puerto
