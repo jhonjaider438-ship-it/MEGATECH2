@@ -5,7 +5,7 @@ import { crearuser, obtenercorreo } from "../model/usuarios.js";
 // registro 
 export const registro = async (req, res) => {
     try {
-        const {cedula,nombre,apellido,telefono,correo,contraseña,rol} = req.body
+        const {cedula,nombre,apellido,telefono,correo,contraseña} = req.body
         // validar datos
         if (!cedula || !nombre || !apellido || !telefono || !correo || !contraseña) {
             return res.status(400).json({
@@ -15,6 +15,9 @@ export const registro = async (req, res) => {
 
         // encriptar la contraseña
         const encriptar = await bcrypt.hash(contraseña, 10);
+
+        // rol por defcto
+        const rol = "Cliente";
 
         // guardar en la base de datos
         const {data,error} = await crearuser(
