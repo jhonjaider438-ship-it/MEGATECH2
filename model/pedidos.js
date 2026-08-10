@@ -1,4 +1,5 @@
 import { supabase } from "../config/supabase.js";
+import { buscarPorCedula } from '../model/usuarios.js'
 
 
 // Obtener todos los pedidos
@@ -40,4 +41,24 @@ export const eliminarPedido = async (id) => {
         .from("pedidos")
         .delete()
         .eq("id", id);
+};
+
+export const obtenerPedidosPorCedula = async (cedula) => {
+
+    // Buscar el usuario
+    const usuario = await buscarPorCedula(cedula);
+
+    if (!usuario) {
+        throw new Error("Usuario no encontrado");
+    }
+
+    // Buscar sus pedidos
+    const { data, error } = await supabase
+        .from("pedidos")
+        .select("*")
+        .eq("id_cliente", usuario.id);
+
+    if (error) throw error;
+
+    return data;
 };

@@ -103,7 +103,7 @@ border-radius:8px;">
 </strong>
 
 <p style="margin:8px 0 0;color:#d8e9ff;">
-Nuestro equipo procesará tu pedido y pronto nos pondremos en contacto contigo para informarte sobre el estado de la entrega.
+Desde administracion le informamos que su pedido ya fue revisado y verificado y ya puede pasar al punto fisico para que sele haga la respectiva entrega 
 </p>
 
 </div>

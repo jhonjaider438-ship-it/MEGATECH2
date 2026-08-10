@@ -67,3 +67,16 @@ export const obtenerAdminsYEmpleados = async () => {
 
     return { data, error };
 };
+
+// Buscar usuario por cédula
+export const buscarPorCedula = async (cedula) => {
+    const { data, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('cedula', cedula)
+        .single();
+
+    if (error) throw error;
+
+    return data;
+};

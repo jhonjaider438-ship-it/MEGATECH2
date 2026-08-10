@@ -9,6 +9,8 @@ import subcategoriasRoutes from "./routes/sub_categorias.js";
 import productosRouter from "./routes/productos.js";
 import pedidosRouter from './routes/pedidos.js';
 import detallePedidoRouter from './routes/detalle_pedido.js';
+import vetasRouter from './routes/ventas.js'
+import comproRouter from './routes/comprobante.js'
 
 // cargar las variables de entorno
 dotenv.config();
@@ -45,7 +47,13 @@ app.use('/detalle_pedido', detallePedidoRouter);
 app.use('/usuario', userRoutes);
 
 // rutas de el registro y del login y recuperar contraseña
-app.use('/auth', authRoutes)
+app.use('/auth', authRoutes);
+
+// rutas de las ventas
+app.use('/ventas', vetasRouter);
+
+// rutas de los comprobantes
+app.use('/compro', comproRouter);
 
 // configuramos el puerto
 const PORT = 3000;

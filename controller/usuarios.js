@@ -1,5 +1,5 @@
 import { json } from "express";
-import { UserModel, porid, actualizar, eliminar } from "../model/usuarios.js";
+import { UserModel, porid, actualizar, eliminar, buscarPorCedula } from "../model/usuarios.js";
 import bcrypt from "bcryptjs";
 
 // obtenertodos los usuarios
@@ -92,3 +92,24 @@ export const eliminaruser = async (req, res) => {
         });
     }
 }
+
+export const obtenerUsuarioPorCedula = async (req, res) => {
+    try {
+        const { cedula } = req.params;
+
+        const usuario = await buscarPorCedula(cedula);
+
+        if (!usuario) {
+            return res.status(404).json({
+                mensaje: "Usuario no encontrado"
+            });
+        }
+
+        res.status(200).json(usuario);
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};

@@ -1,4 +1,4 @@
-import { obtenerPedidos,obtenerPedidoPorId,crearPedido,actualizarPedido,eliminarPedido } from "../model/pedidos.js";
+import { obtenerPedidos,obtenerPedidoPorId,crearPedido,actualizarPedido,eliminarPedido, obtenerPedidosPorCedula } from "../model/pedidos.js";
 import { porid as UserModel } from "../model/usuarios.js";
 import {crearDetalle} from "../model/detalle_pedido.js";
 import { actualizarStock } from "../model/productos.js";
@@ -223,4 +223,24 @@ export const eliminar = async (req, res) => {
     res.json({
         mensaje: "Pedido eliminado correctamente"
     });
+};
+
+export const pedidosPorCedula = async (req, res) => {
+
+    try {
+
+        const { cedula } = req.params;
+
+        const pedidos = await obtenerPedidosPorCedula(cedula);
+
+        res.status(200).json(pedidos);
+
+    } catch (error) {
+
+        res.status(500).json({
+            error: error.message
+        });
+
+    }
+
 };
