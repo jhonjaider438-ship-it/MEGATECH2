@@ -1,4 +1,4 @@
-import { crearComprobante, obtenerComprobantes, obtenerComprobantePorPedido, obtenerPedidoPorId } from "../model/conprobante.js";
+import { crearComprobante, obtenerComprobantes, obtenerComprobantePorPedidoo, obtenerPedidoPorId } from "../model/conprobante.js";
 
 // Registrar comprobante
 export const registrarComprobante = async (req, res) => {
@@ -86,7 +86,7 @@ export const comprobantePorPedido = async (req, res) => {
         const { id_pedido } = req.params;
 
         const { data, error } =
-            await obtenerComprobantePorPedido(id_pedido);
+            await obtenerComprobantePorPedidoo(id_pedido);
 
         if (error || !data) {
             return res.status(404).json({

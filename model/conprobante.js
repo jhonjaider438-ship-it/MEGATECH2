@@ -31,7 +31,7 @@ export const obtenerComprobantes = async () => {
 };
 
 // Obtener comprobante por pedido
-export const obtenerComprobantePorPedido = async (id_pedido) => {
+export const obtenerComprobantePorPedidoo = async (id_pedido) => {
     return await supabase
         .from("comprobantes")
         .select(`
