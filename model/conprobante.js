@@ -35,17 +35,57 @@ export const obtenerComprobantePorPedido = async (id_pedido) => {
     return await supabase
         .from("comprobantes")
         .select(`
-            *,
+            id,
+            id_pedido,
+            id_cliente,
+            fecha,
+            foto,
+
             usuarios (
                 id,
                 cedula,
                 nombre,
-                apellido
+                apellido,
+                telefono,
+                correo
             ),
+
             pedidos (
                 id,
+                fecha,
                 estado,
-                total
+                total,
+                id_cliente,
+
+                detalle_pedido (
+                    id,
+                    id_pedido,
+                    id_producto,
+                    cantidad,
+                    precio_unitario,
+                    subtotal,
+
+                    productos (
+                        id,
+                        nombre,
+                        descripcion,
+                        precio,
+                        stock,
+                        foto,
+                        id_subcategoria,
+
+                        subcategorias (
+                            id,
+                            nombre,
+                            id_categoria,
+
+                            categorias (
+                                id,
+                                nombre_categoria
+                            )
+                        )
+                    )
+                )
             )
         `)
         .eq("id_pedido", id_pedido)
