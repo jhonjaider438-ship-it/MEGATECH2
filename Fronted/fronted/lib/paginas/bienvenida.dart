@@ -13,7 +13,7 @@ class _bienvenidaState extends State<bienvenida> {
     return Scaffold(
       body: Column(
         children: [
-          Text('Bienvenido a Megatech 2'),
+          Text('Bienvenido a Megatech '),
           Text(
             'En Megatech 2 te ofrecemos lo mejor en tecnología con una experiencia rápida, segura y confiable para que compres sin complicaciones.',
           ),
