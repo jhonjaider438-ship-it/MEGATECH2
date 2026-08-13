@@ -142,7 +142,7 @@ class _BienvenidaState extends State<Bienvenida> {
                   ),
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: 100),
               ],
             ),
           ),
