@@ -11,7 +11,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Scaffold(body: Center(child: bienvenida())),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(body: Center(child: Bienvenida())),
     );
   }
 }
