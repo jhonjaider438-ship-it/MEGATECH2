@@ -11,6 +11,7 @@ import pedidosRouter from './routes/pedidos.js';
 import detallePedidoRouter from './routes/detalle_pedido.js';
 import vetasRouter from './routes/ventas.js'
 import comproRouter from './routes/comprobante.js'
+import cors from 'cors';
 
 // cargar las variables de entorno
 dotenv.config();
@@ -21,6 +22,7 @@ const app =  express();
 
 // leer el json
 app.use(express.json());
+app.use(cors());
 
 // ruta de prueba
 app.get('/',(req,res)=>{

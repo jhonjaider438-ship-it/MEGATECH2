@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../service/apiuser.dart';
+import '../service/confiuser.dart';
+import '../paginas/homeclie.dart';
+import '../paginas/homeemple.dart';
+import '../paginas/homeadmin.dart';
+import '../model/user.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -9,6 +15,77 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final TextEditingController correoController = TextEditingController();
+  final TextEditingController contrasenaController = TextEditingController();
+
+  final userservice _userService = userservice();
+
+  Future<void> iniciarSesion() async {
+    try {
+
+      final respuesta = await _userService.loginUsuario(
+        correoController.text.trim(),
+        contrasenaController.text,
+      );
+
+      final usuario = usermodel.fromJson(respuesta['usuario']);
+
+      if (!mounted) return;
+
+      if (usuario.rol == 'Cliente') {
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Homeclie(),
+          ),
+        );
+
+      } else if (usuario.rol == 'Empleado') {
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Homeemple(),
+          ),
+        );
+
+      } else if (usuario.rol == 'Admin') {
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Homeadmin(),
+          ),
+        );
+
+      } else {
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Rol no reconocido'),
+          ),
+        );
+      }
+
+    } catch (e) {
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    correoController.dispose();
+    contrasenaController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,33 +125,26 @@ class _LoginState extends State<Login> {
                         ],
                       ),
                     ),
-                    child: const Icon(
-                      Icons.undo,
-                      color: Colors.white,
-                      size: 27,
-                    ),
-                  ),
-                  Container(
-                    width: 54,
-                    height: 43,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF29B6F6),
-                          Color(0xFF0288D1),
-                        ],
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(15),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Center(
+                        child: const Icon(
+                        Icons.undo,
+                        color: Colors.white,
+                        size: 27,
                       ),
                     ),
-                    child: const Icon(
-                      Icons.shopping_cart_outlined,
-                      color: Colors.white,
-                      size: 27,
-                    ),
-                  )
+                      ),
+                    )
+                  ),
                 ],
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 30),
 
               // targeta del login
               Container(
@@ -135,6 +205,8 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 6),
 
                     TextField(
+                      controller: correoController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
@@ -161,6 +233,7 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 6),
 
                     TextField(
+                      controller: contrasenaController,
                       obscureText: true,
                       decoration: InputDecoration(
                         filled: true,
@@ -208,7 +281,9 @@ class _LoginState extends State<Login> {
                     ),
                     // boton de iniciar sesion
                     const SizedBox(height: 8),
-                    Container(
+                    GestureDetector(
+                      onTap: iniciarSesion,
+                      child: Container(
                       width: 185,
                       height: 42,
                       decoration: BoxDecoration(
@@ -229,6 +304,7 @@ class _LoginState extends State<Login> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    ),
                     ),
                     ),
                     const SizedBox(height: 25),

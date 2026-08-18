@@ -96,7 +96,16 @@ export const login = async (req, res) => {
         );
         return res.status(200).json({
             mesaggen: 'login exitoso',
-            token
+            token,
+            usuario: {
+                id: usuario.id,
+                cedula: usuario.cedula,
+                nombre: usuario.nombre,
+                apellido: usuario.apellido,
+                telefono: usuario.telefono,
+                correo: usuario.correo,
+                rol: usuario.rol
+            }
         });
     } catch (error) {
         console.error('error en el login:', error);
