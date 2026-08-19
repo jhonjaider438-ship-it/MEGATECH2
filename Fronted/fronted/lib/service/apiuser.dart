@@ -9,7 +9,7 @@ class ApiConfig {
     //evaluaremos para dispositivos moviles
     if (Platform.isAndroid) {
       // emulador para androit
-      return 'http://10.0.2.2:3000/auth';
+      return 'http://10.4.8.167:3000/auth';
     } else if (Platform.isIOS) {
       // emulador para ios
       return 'http://localhost:3000/auth';

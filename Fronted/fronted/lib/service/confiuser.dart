@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
-import '../model/user.dart';
 import 'apiuser.dart';
 
 class userservice {
@@ -16,7 +14,7 @@ class userservice {
       final response = await http.post(
         url,
         headers: ApiConfig.headers,
-        body: jsonEncode({'correo': correo, 'contrasena': contrasena}),
+        body: jsonEncode({'correo': correo, 'contraseña': contrasena}),
       );
 
       final contentType = response.headers['content-type'] ?? '';
