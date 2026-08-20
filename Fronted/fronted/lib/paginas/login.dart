@@ -21,6 +21,8 @@ class _LoginState extends State<Login> {
 
   final userservice _userService = userservice();
 
+  bool recordarme = false;
+
   Future<void> iniciarSesion() async {
     try {
       final respuesta = await _userService.loginUsuario(
@@ -227,7 +229,14 @@ class _LoginState extends State<Login> {
                         children: [
                           Row(
                             children: [
-                              Checkbox(value: false, onChanged: (value) {}),
+                              Checkbox(
+                                value: recordarme,
+                                onChanged: (value) {
+                                  setState(() {
+                                    recordarme = value ?? false;
+                                  });
+                                },
+                              ),
                               Text(
                                 'Recordarme',
                                 style: GoogleFonts.poppins(
