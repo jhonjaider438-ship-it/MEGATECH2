@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
-import '../model/user.dart';
 import 'apiuser.dart';
 
 class userservice {
