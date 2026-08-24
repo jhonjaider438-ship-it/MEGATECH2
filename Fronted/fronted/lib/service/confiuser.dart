@@ -16,7 +16,7 @@ class userservice {
       final response = await http.post(
         url,
         headers: ApiConfig.headers,
-        body: jsonEncode({'correo': correo, 'contrasena': contrasena}),
+        body: jsonEncode({'correo': correo, 'contraseña': contrasena}),
       );
 
       final contentType = response.headers['content-type'] ?? '';
