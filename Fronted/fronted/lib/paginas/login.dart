@@ -85,7 +85,6 @@ class _LoginState extends State<Login> {
           ),
         ),
         child: SafeArea(
-          // SOLUCIÓN AL OVERFLOW: Añadido SingleChildScrollView
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
             child: Column(
