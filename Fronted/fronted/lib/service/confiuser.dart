@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'apiuser.dart';
 
-class userservice {
+class Userservice {
   // Peticion POST para iniciar sesion (NUEVO, dentro de la misma clase)
   Future<Map<String, dynamic>> loginUsuario(
     String correo,
