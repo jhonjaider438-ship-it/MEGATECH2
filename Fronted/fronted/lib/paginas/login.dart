@@ -22,6 +22,7 @@ class _LoginState extends State<Login> {
   final userservice _userService = userservice();
 
   bool recordarme = false;
+  bool ocultarContrasena = true;
 
   Future<void> iniciarSesion() async {
     try {
@@ -206,14 +207,25 @@ class _LoginState extends State<Login> {
                       const SizedBox(height: 6),
                       TextField(
                         controller: contrasenaController,
-                        obscureText: true,
+                        obscureText: ocultarContrasena,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          suffixIcon: const Icon(
-                            Icons.visibility_off_outlined,
-                            color: Colors.black,
+
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                ocultarContrasena = !ocultarContrasena;
+                              });
+                            },
+                            icon: Icon(
+                              ocultarContrasena
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: Colors.black,
+                            ),
                           ),
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(11),
                             borderSide: BorderSide.none,

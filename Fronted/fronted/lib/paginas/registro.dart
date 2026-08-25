@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fronted/paginas/login.dart';
+import 'package:fronted/paginas/screen/register.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fronted/model/user.dart';
+import 'package:fronted/service/apiuser.dart';
+import 'package:fronted/service/confiuser.dart';
 
 class Registro extends StatefulWidget {
   const Registro({super.key});
@@ -10,15 +14,94 @@ class Registro extends StatefulWidget {
 }
 
 class _RegistroState extends State<Registro> {
-
+  final cedulaController = TextEditingController();
+  final nombreController = TextEditingController();
+  final apellidoController = TextEditingController();
+  final telefonoController = TextEditingController();
+  final correoController = TextEditingController();
+  final contrasenaController = TextEditingController();
+  final confirmarController = TextEditingController();
   bool aceptar = false;
+  bool ocultarContrasena = true;
+  bool ocultarConfirmacion = true;
+
+  Future<void> registrarUsuario() async {
+    // 1. Verificar que todos los campos estén llenos
+    if (cedulaController.text.trim().isEmpty ||
+        nombreController.text.trim().isEmpty ||
+        apellidoController.text.trim().isEmpty ||
+        telefonoController.text.trim().isEmpty ||
+        correoController.text.trim().isEmpty ||
+        contrasenaController.text.isEmpty ||
+        confirmarController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor completa todos los campos')),
+      );
+      return;
+    }
+
+    // 2. Verificar que aceptó términos y condiciones
+    if (!aceptar) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Debes aceptar los términos y condiciones para registrarte',
+          ),
+        ),
+      );
+      return;
+    }
+
+    // 3. Verificar que las contraseñas sean iguales
+    if (contrasenaController.text != confirmarController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Las contraseñas no coinciden')),
+      );
+      return;
+    }
+
+    // 4. Crear el usuario
+    final usuario = usermodel(
+      cedula: cedulaController.text.trim(),
+      nombre: nombreController.text.trim(),
+      apellido: apellidoController.text.trim(),
+      telefono: telefonoController.text.trim(),
+      correo: correoController.text.trim(),
+      contrasena: contrasenaController.text,
+      rol: 'Cliente',
+    );
+
+    // 5. Enviar al backend
+    try {
+      await userservice().registrar(usuario);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Usuario registrado correctamente')),
+      );
+
+      // 6. Ir al login
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Register()),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold (body: Container(
-      height: double.infinity,
-      width: double.infinity,
-      // FONDO
+    return Scaffold(
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        // FONDO
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -26,11 +109,13 @@ class _RegistroState extends State<Registro> {
             colors: [Color(0xFF173A55), Color(0xFF0B202E), Color(0xFF06141D)],
           ),
         ),
-        child: SafeArea(child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
-          child: Column(
-            children: [Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
                       width: 54,
@@ -58,9 +143,9 @@ class _RegistroState extends State<Registro> {
                         ),
                       ),
                     ),
-                  ],   
-            ),
-            const SizedBox(height: 20),
+                  ],
+                ),
+                const SizedBox(height: 20),
 
                 // Tarjeta del login
                 Container(
@@ -116,6 +201,7 @@ class _RegistroState extends State<Registro> {
                       ),
                       const SizedBox(height: 6),
                       TextField(
+                        controller: cedulaController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           filled: true,
@@ -140,6 +226,7 @@ class _RegistroState extends State<Registro> {
                       ),
                       const SizedBox(height: 6),
                       TextField(
+                        controller: nombreController,
                         keyboardType: TextInputType.name,
                         decoration: InputDecoration(
                           filled: true,
@@ -164,6 +251,7 @@ class _RegistroState extends State<Registro> {
                       ),
                       const SizedBox(height: 6),
                       TextField(
+                        controller: apellidoController,
                         keyboardType: TextInputType.name,
                         decoration: InputDecoration(
                           filled: true,
@@ -188,6 +276,7 @@ class _RegistroState extends State<Registro> {
                       ),
                       const SizedBox(height: 6),
                       TextField(
+                        controller: telefonoController,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           filled: true,
@@ -212,6 +301,7 @@ class _RegistroState extends State<Registro> {
                       ),
                       const SizedBox(height: 6),
                       TextField(
+                        controller: correoController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           filled: true,
@@ -237,14 +327,26 @@ class _RegistroState extends State<Registro> {
                       ),
                       const SizedBox(height: 6),
                       TextField(
-                        obscureText: true,
+                        controller: contrasenaController,
+                        obscureText: ocultarContrasena,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          suffixIcon: const Icon(
-                            Icons.visibility_off_outlined,
-                            color: Colors.black,
+
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                ocultarContrasena = !ocultarContrasena;
+                              });
+                            },
+                            icon: Icon(
+                              ocultarContrasena
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: Colors.black,
+                            ),
                           ),
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(11),
                             borderSide: BorderSide.none,
@@ -266,14 +368,26 @@ class _RegistroState extends State<Registro> {
                       ),
                       const SizedBox(height: 6),
                       TextField(
-                        obscureText: true,
+                        controller: confirmarController,
+                        obscureText: ocultarConfirmacion,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          suffixIcon: const Icon(
-                            Icons.visibility_off_outlined,
-                            color: Colors.black,
+
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                ocultarConfirmacion = !ocultarConfirmacion;
+                              });
+                            },
+                            icon: Icon(
+                              ocultarConfirmacion
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: Colors.black,
+                            ),
                           ),
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(11),
                             borderSide: BorderSide.none,
@@ -305,8 +419,9 @@ class _RegistroState extends State<Registro> {
                       ),
                       const SizedBox(height: 8),
 
-                      // Botón de iniciar sesión
+                      // Botón de registrar
                       GestureDetector(
+                        onTap: registrarUsuario,
                         child: Container(
                           width: 250,
                           height: 42,
@@ -318,7 +433,7 @@ class _RegistroState extends State<Registro> {
                           ),
                           child: Center(
                             child: Text(
-                              'Iniciar sesion',
+                              'Registrarse',
                               style: GoogleFonts.acme(
                                 color: Colors.black,
                                 fontSize: 15,
@@ -363,10 +478,11 @@ class _RegistroState extends State<Registro> {
                     ],
                   ),
                 ),
-            ],
+              ],
+            ),
           ),
-        )),
-    )
+        ),
+      ),
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:fronted/model/user.dart';
 import 'package:http/http.dart' as http;
 import 'apiuser.dart';
 
@@ -44,6 +46,40 @@ class userservice {
       }
     } catch (e) {
       throw Exception(e.toString().replaceAll('Exception: ', ''));
+    }
+  }
+
+  // peticion para registrar un nuevo usuario
+  Future<usermodel> registrar(usermodel usuario) async {
+    final url = Uri.parse('${ApiConfig.baseUrl}/registro');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: ApiConfig.headers,
+        body: jsonEncode(usuario.toJson()),
+      );
+      final ContentType = response.headers['content-type'] ?? '';
+
+      // si el server responde 201 o 200
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+        // retornar con los mismos datos de supabase
+        return usermodel.fromJson(responseData);
+      } else {
+        // verifica la respuesta
+        if (ContentType.contains('application/json')) {
+          final Map<String, dynamic> errorData = jsonDecode(response.body);
+          final String errorMessage =
+              errorData['message'] ?? 'Error desconocido';
+          throw Exception(errorMessage);
+        } else {
+          throw Exception('Error al registrar usuario: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      throw Exception(e.toString().replaceAll('Exception:', ''));
     }
   }
 }
