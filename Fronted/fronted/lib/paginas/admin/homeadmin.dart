@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../admin/widets.dart/targetas.dart';
 
 class Homeadmin extends StatefulWidget {
   const Homeadmin({super.key});
@@ -28,7 +29,10 @@ class _HomeadminState extends State<Homeadmin> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 36,
+                    vertical: 20,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -82,14 +86,13 @@ class _HomeadminState extends State<Homeadmin> {
                   ),
                 ),
 
-                const Divider(
-                  color: Colors.white,
-                  thickness: 1,
-                  height: 20,
-                ),
+                const Divider(color: Colors.white, thickness: 1, height: 20),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 20,
+                  ),
                   child: Column(
                     children: [
                       Column(
@@ -97,18 +100,109 @@ class _HomeadminState extends State<Homeadmin> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Hola nombre', style: GoogleFonts.poppins(
-                                color: Color(0xFF1BC2F0),
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),)
+                              Text(
+                                'Hola, nombre',
+                                style: GoogleFonts.poppins(
+                                  color: const Color(0xFF1BC2F0),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ],
                           ),
+                          const SizedBox(height: 20),
+
                           Row(
                             children: [
-                              
+                              Expanded(
+                                child: Container(
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF1F2937),
+                                    borderRadius: BorderRadius.circular(25),
+                                    border: Border.all(
+                                      color: const Color(0xFF1BC2F0),
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(7),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '2',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 24,
+                                              color: const Color(0xFF1BC2F0),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            textAlign: TextAlign.center,
+                                            'Pedidos por entregar',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Container(
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF1F2937),
+                                    borderRadius: BorderRadius.circular(25),
+                                    border: Border.all(
+                                      color: const Color(0xFF1BC2F0),
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(7),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '15',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 24,
+                                              color: const Color(0xFF1BC2F0),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            textAlign: TextAlign.center,
+                                            'Productos en bajo stock',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ],
