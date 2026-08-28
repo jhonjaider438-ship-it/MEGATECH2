@@ -61,3 +61,10 @@ export const eliminarProducto = async (id) => {
         .delete()
         .eq("id", id);
 };
+
+export const contarProductosBajoStock = async (umbral = 5) => {
+    return await supabase
+        .from("productos")
+        .select("*", { count: "exact", head: true })
+        .lte("stock", umbral);
+};

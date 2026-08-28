@@ -1,11 +1,13 @@
 import express from "express";
 
-import {listarProductos,obtenerProducto,crear,actualizar,eliminar} from "../controller/productos.js";
+import {listarProductos,obtenerProducto,crear,actualizar,eliminar,bajoStock} from "../controller/productos.js";
 import { verificarToken, verificarRol } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.get("/", listarProductos);
+
+router.get("/bajo-stock", bajoStock);
 
 router.get("/obtener/:id", obtenerProducto);
 

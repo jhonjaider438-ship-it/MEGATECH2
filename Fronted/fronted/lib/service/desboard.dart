@@ -7,10 +7,7 @@ class DashboardService {
   Future<Map<String, String>> _headersConToken() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
-    return {
-      ...ApiConfig.headers,
-      'Authorization': 'Bearer $token',
-    };
+    return {...ApiConfig.headers, 'Authorization': 'Bearer $token'};
   }
 
   Future<int> obtenerPedidosPorEntregar() async {
@@ -22,6 +19,18 @@ class DashboardService {
       return data['total'] ?? 0;
     } else {
       throw Exception('Error al obtener pedidos por entregar');
+    }
+  }
+
+  Future<int> obtenerProductosBajoStock() async {
+    final url = Uri.parse('${ApiConfig.rootUrl}/productos/bajo-stock');
+    final response = await http.get(url, headers: await _headersConToken());
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['total'] ?? 0;
+    } else {
+      throw Exception('Error al obtener productos con bajo stock');
     }
   }
 }

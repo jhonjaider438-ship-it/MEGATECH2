@@ -1,4 +1,4 @@
-import {obtenerProductos,obtenerProductoPorId,crearProducto,actualizarProducto,eliminarProducto } from "../model/productos.js";
+import {obtenerProductos,obtenerProductoPorId,crearProducto,actualizarProducto,eliminarProducto, contarProductosBajoStock } from "../model/productos.js";
 import { obtenerAdminsYEmpleados } from "../model/usuarios.js";
 import { enviarAlertaStock } from '../utils/sendemail.js';
 
@@ -88,4 +88,14 @@ export const verificarStock = async (producto) => {
 
     }
 
-}
+};
+
+export const bajoStock = async (req, res) => {
+    const { count, error } = await contarProductosBajoStock();
+
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+
+    res.json({ total: count });
+};
