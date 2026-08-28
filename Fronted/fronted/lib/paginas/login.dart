@@ -7,6 +7,7 @@ import '../paginas/empleado/homeemple.dart';
 import '../model/user.dart';
 import '../paginas/recuperapass.dart';
 import '../paginas/registro.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -33,6 +34,9 @@ class _LoginState extends State<Login> {
 
       final usuario = usermodel.fromJson(respuesta['usuario']);
 
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', respuesta['token']);
+
       if (!mounted) return;
 
       if (usuario.rol == 'Cliente') {
@@ -48,7 +52,7 @@ class _LoginState extends State<Login> {
       } else if (usuario.rol == 'Admin') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Homeadmin()),
+          MaterialPageRoute(builder: (context) =>  Homeadmin(nombre: usuario.nombre ?? '' ),),
         );
       } else {
         ScaffoldMessenger.of(

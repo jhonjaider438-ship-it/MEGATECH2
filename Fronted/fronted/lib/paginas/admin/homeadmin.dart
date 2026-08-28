@@ -1,15 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:fronted/colores/stilocolores.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../admin/widets.dart/targetas.dart';
+import 'package:fronted/service/desboard.dart';
 
 class Homeadmin extends StatefulWidget {
-  const Homeadmin({super.key});
+  final String nombre;
+
+
+  const Homeadmin({super.key, required this.nombre});
 
   @override
   State<Homeadmin> createState() => _HomeadminState();
 }
 
 class _HomeadminState extends State<Homeadmin> {
+
+  final DashboardService _dashboardService = DashboardService();
+
+  int pedidosPorEntregar = 0;
+  bool cargandoPedidos = true;
+
+  @override
+  void initState() {
+    super.initState();
+    cargarPedidos();
+  }
+
+  Future<void> cargarPedidos() async {
+    try {
+      final total = await _dashboardService.obtenerPedidosPorEntregar();
+      if (mounted) {
+        setState(() {
+          pedidosPorEntregar = total;
+          cargandoPedidos = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) setState(() => cargandoPedidos = false);
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +132,7 @@ class _HomeadminState extends State<Homeadmin> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Hola, nombre',
+                                'Hola, ${widget.nombre}',
                                 style: GoogleFonts.poppins(
                                   color: const Color(0xFF1BC2F0),
                                   fontSize: 24,
@@ -135,7 +166,7 @@ class _HomeadminState extends State<Homeadmin> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            '2',
+                                            cargandoPedidos ? '...' : '$pedidosPorEntregar',
                                             style: GoogleFonts.poppins(
                                               fontSize: 24,
                                               color: const Color(0xFF1BC2F0),
@@ -182,7 +213,7 @@ class _HomeadminState extends State<Homeadmin> {
                                             '15',
                                             style: GoogleFonts.poppins(
                                               fontSize: 24,
-                                              color: const Color(0xFF1BC2F0),
+                                              color: const Color.fromARGB(255, 236, 4, 4),
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -201,6 +232,38 @@ class _HomeadminState extends State<Homeadmin> {
                                   ),
                                 ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(child: Targetas(titulo: 'Bajo stok', descripcion: 'productos que estan en unidades criticas', colorTitulo: AppColors.azulClaro, colorBorde: AppColors.bordeTarjeta, textoBoton: 'Revisar', onPressed: () {})),
+                              const SizedBox(width: 10),
+                              Expanded(child: Targetas(titulo: 'Pedidos', descripcion: 'Pedidos echos por la app que deben de ser entregados', colorTitulo: AppColors.azulClaro, colorBorde: AppColors.bordeTarjeta, textoBoton: 'Colsultar', onPressed: () {}))
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(child: Targetas(titulo: 'Registrar ventas', descripcion: 'Registrar ventas fisicas y transacciones del local', colorTitulo: AppColors.azulClaro, colorBorde: AppColors.bordeTarjeta, textoBoton: 'Registrar', onPressed: () {})),
+                              const SizedBox(width: 10),
+                              Expanded(child: Targetas(titulo: 'Inventario', descripcion: 'Revisar inventario', colorTitulo: AppColors.azulClaro, colorBorde: AppColors.bordeTarjeta, textoBoton: 'Colsultar', onPressed: () {}))
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(child: Targetas(titulo: 'Gestion contable', descripcion: 'Revisar gestion contable', colorTitulo: AppColors.azulClaro, colorBorde: AppColors.bordeTarjeta, textoBoton: 'Consultar', onPressed: () {})),
+                              const SizedBox(width: 10),
+                              Expanded(child: Targetas(titulo: 'Actualizar inventario', descripcion: 'Modidificar inventario', colorTitulo: AppColors.azulClaro, colorBorde: AppColors.bordeTarjeta, textoBoton: 'Ingresar', onPressed: () {}))
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              Expanded(child: Targetas(titulo: 'Gestion de usuarios', descripcion: 'Modificar informacion de los usuarios', colorTitulo: AppColors.azulClaro, colorBorde: AppColors.bordeTarjeta, textoBoton: 'Modificar', onPressed: () {})),
+                              const SizedBox(width: 10),
+                              Expanded(child: Targetas(titulo: 'verificar transferencias', descripcion: 'Verificar las transferencias de los pagos de los pedidos', colorTitulo: AppColors.azulClaro, colorBorde: AppColors.bordeTarjeta, textoBoton: 'Consultar', onPressed: () {}))
                             ],
                           ),
                         ],

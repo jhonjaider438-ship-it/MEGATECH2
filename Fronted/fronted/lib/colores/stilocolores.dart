@@ -1,11 +1,39 @@
 import 'package:flutter/material.dart';
 
+/// Paleta de colores de MEGATECH 2.
+class AppColors {
+  AppColors._();
 
-class colores extends StatelessWidget {
-  const colores({super.key});
+  // Fondo general 
+  static const Color fondoOscuro1 = Color(0xFF173A55);
+  static const Color fondoOscuro2 = Color(0xFF0B202E);
+  static const Color fondoOscuro3 = Color(0xFF06141D);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
+  // Tarjeta contenedor principal
+  static const Color fondoTarjeta = Color(0xFF202A39);
+  static const Color bordeTarjeta = Color(0xFF20BFFF);
+
+  // Botones 
+  static const Color azulClaro = Color(0xFF29B6F6);
+  static const Color azulOscuro = Color(0xFF0288D1);
+  static const Color azulEnlace = Color(0xFF2196F3);
+
+  // Campos de texto
+  static const Color fondoCampo = Colors.white;
+  static const Color iconoCampo = Colors.black;
+
+  // Textos
+  static const Color textoPrincipal = Colors.white;
+  static const Color textoBoton = Colors.black;
+
+  // Gradientes reutilizables
+  static const LinearGradient gradienteFondo = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [fondoOscuro1, fondoOscuro2, fondoOscuro3],
+  );
+
+  static const LinearGradient gradienteBoton = LinearGradient(
+    colors: [azulClaro, azulOscuro],
+  );
 }
