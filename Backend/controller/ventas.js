@@ -7,17 +7,17 @@ export const registrarVenta = async (req, res) => {
 
     try {
 
-        const { id_cliente, id_vendedor, productos } = req.body;
+        const { cedula_cliente, id_vendedor, productos } = req.body;
 
         // Validar datos
-        if (!id_cliente || !id_vendedor || !productos || productos.length === 0) {
+        if (!cedula_cliente || !id_vendedor || !productos || productos.length === 0) {
             return res.status(400).json({
                 error: "Faltan datos para registrar la venta."
             });
         }
 
         // Verificar cliente
-        const { data: cliente, error: errorCliente } = await obtenerUsuarioporid(id_cliente);
+        const { data: cliente, error: errorCliente } = await obtenerUsuarioPorCedula(cedula_cliente);
 
         if (errorCliente || !cliente) {
             return res.status(404).json({
@@ -71,7 +71,7 @@ export const registrarVenta = async (req, res) => {
         const { data: venta, error: errorVenta } = await crearVenta({
             fecha: new Date(Date.now() - 5 * 60 * 60 * 1000),
             total,
-            id_cliente,
+            id_cliente: cliente.id,
             id_vendedor
         });
 

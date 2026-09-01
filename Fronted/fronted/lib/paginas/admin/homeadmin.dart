@@ -316,7 +316,7 @@ class _HomeadminState extends State<Homeadmin> {
                                 child: Targetas(
                                   titulo: 'Registrar ventas',
                                   descripcion:
-                                      'Registrar ventas fisicas y transacciones del local',
+                                      'Registrar ventas fisicas',
                                   colorTitulo: AppColors.azulClaro,
                                   colorBorde: AppColors.bordeTarjeta,
                                   textoBoton: 'Registrar',
