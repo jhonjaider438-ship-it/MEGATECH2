@@ -20,7 +20,7 @@ class _LoginState extends State<Login> {
   final TextEditingController correoController = TextEditingController();
   final TextEditingController contrasenaController = TextEditingController();
 
-  final userservice _userService = userservice();
+  final Userservice _userService = Userservice();
 
   bool recordarme = false;
   bool ocultarContrasena = true;
