@@ -67,3 +67,11 @@ export const obtenerPedidosPorCedula = async (cedula) => {
 
     return { data, error };
 };
+
+// Contar pedidos que están "Por entregar"
+export const contarPedidosPorEntregar = async () => {
+    return await supabase
+        .from("pedidos")
+        .select("*", { count: "exact", head: true })
+        .eq("estado", "Por entregar");
+};

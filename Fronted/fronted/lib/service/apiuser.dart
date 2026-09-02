@@ -19,6 +19,19 @@ class ApiConfig {
     }
   }
 
+  static String get rootUrl {
+    if (kIsWeb) {
+      return 'http://localhost:3000';
+    }
+    if (Platform.isAndroid) {
+      return 'http://10.4.8.167:3000';
+    } else if (Platform.isIOS) {
+      return 'http://localhost:3000';
+    } else {
+      return 'http://localhost:3000';
+    }
+  }
+
   static const Map<String, String> headers = {
     'content-Type': 'application/json',
     'Accept': 'application/json',

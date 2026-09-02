@@ -1,4 +1,4 @@
-import { obtenerPedidos,obtenerPedidoPorId,crearPedido,actualizarPedido,eliminarPedido, obtenerPedidosPorCedula } from "../model/pedidos.js";
+import { obtenerPedidos,obtenerPedidoPorId,crearPedido,actualizarPedido,eliminarPedido, obtenerPedidosPorCedula, contarPedidosPorEntregar } from "../model/pedidos.js";
 import { porid as UserModel } from "../model/usuarios.js";
 import {crearDetalle} from "../model/detalle_pedido.js";
 import { actualizarStock } from "../model/productos.js";
@@ -519,4 +519,15 @@ export const pedidosPorCedula = async (req, res) => {
 
     }
 
+};
+
+export const contarPorEntregar = async (req, res) => {
+
+    const { count, error } = await contarPedidosPorEntregar();
+
+    if (error) {
+        return res.status(500).json(error);
+    }
+
+    res.json({ total: count });
 };

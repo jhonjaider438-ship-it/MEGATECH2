@@ -7,6 +7,7 @@ import '../paginas/empleado/homeemple.dart';
 import '../model/user.dart';
 import '../paginas/recuperapass.dart';
 import '../paginas/registro.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -22,6 +23,7 @@ class _LoginState extends State<Login> {
   final Userservice _userService = Userservice();
 
   bool recordarme = false;
+  bool ocultarContrasena = true;
 
   Future<void> iniciarSesion() async {
     try {
@@ -31,6 +33,9 @@ class _LoginState extends State<Login> {
       );
 
       final usuario = usermodel.fromJson(respuesta['usuario']);
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', respuesta['token']);
 
       if (!mounted) return;
 
@@ -47,7 +52,7 @@ class _LoginState extends State<Login> {
       } else if (usuario.rol == 'Admin') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Homeadmin()),
+          MaterialPageRoute(builder: (context) =>  Homeadmin(nombre: usuario.nombre ?? '' ),),
         );
       } else {
         ScaffoldMessenger.of(
@@ -85,7 +90,6 @@ class _LoginState extends State<Login> {
           ),
         ),
         child: SafeArea(
-          // SOLUCIÓN AL OVERFLOW: Añadido SingleChildScrollView
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
             child: Column(
@@ -122,6 +126,7 @@ class _LoginState extends State<Login> {
                   ],
                 ),
                 const SizedBox(height: 20),
+                
 
                 // Tarjeta del login
                 Container(
@@ -207,14 +212,25 @@ class _LoginState extends State<Login> {
                       const SizedBox(height: 6),
                       TextField(
                         controller: contrasenaController,
-                        obscureText: true,
+                        obscureText: ocultarContrasena,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          suffixIcon: const Icon(
-                            Icons.visibility_off_outlined,
-                            color: Colors.black,
+
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                ocultarContrasena = !ocultarContrasena;
+                              });
+                            },
+                            icon: Icon(
+                              ocultarContrasena
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: Colors.black,
+                            ),
                           ),
+
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(11),
                             borderSide: BorderSide.none,
