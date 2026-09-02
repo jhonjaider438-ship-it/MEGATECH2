@@ -175,7 +175,7 @@ export const  verificode = async  (req, res) => {
             return res.status(400).json({error: 'todos los datos son requeridos'});
         }
 
-        // verificamos si el usuario ya esta en la base de datos
+        // verificamos si el usuario ya esta en la base de datos 
         const {data: usuario} = await obtenercorreo(correo);
         if (!usuario) {
             return res.status(404).json({error: 'usuario no encontrado'});

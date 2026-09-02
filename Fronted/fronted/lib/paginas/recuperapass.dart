@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../model/recuperapass.dart';
 import '../service/recuperapass.dart';
-import '../paginas/codigoverificacion.dart';
+import 'screen/codigoverificacion.dart';
+import 'screen/recuperapass.dart';
 
 class Recuperapass extends StatefulWidget {
   const Recuperapass({super.key});
@@ -14,6 +15,7 @@ class _RecuperapassState extends State<Recuperapass> {
   final TextEditingController emailController = TextEditingController();
 
   final RecuperarService recuperarService = RecuperarService();
+
   Future<void> enviarCodigo() async {
     final correo = emailController.text.trim();
 
@@ -21,6 +23,7 @@ class _RecuperapassState extends State<Recuperapass> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor ingrese su correo electrónico'),
+          backgroundColor: Colors.red,
         ),
       );
       return;
@@ -29,29 +32,24 @@ class _RecuperapassState extends State<Recuperapass> {
     try {
       final recuperar = RecuperarModel(correo: correo);
 
+      // Enviar código al backend
       final respuesta = await recuperarService.enviarCodigo(recuperar);
 
       if (!mounted) return;
 
+      // Ir a pantalla "Código enviado"
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => VerificarCodigo(correo: correo),
-        ),
-      );
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(respuesta['mensaje'] ?? 'Código enviado correctamente'),
-        ),
+        MaterialPageRoute(builder: (context) => CodigoEnviado(correo: correo)),
       );
     } catch (e) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+        SnackBar(
+          content: Text(e.toString().replaceFirst('Exception: ', '')),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }

@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
 import 'apiuser.dart';
 import '../model/recuperapass.dart';
 import '../model/codigoverificacion.dart';
 
 class RecuperarService {
-  // Petición POST para enviar código de recuperación
+  // ==========================================
+  // ENVIAR CÓDIGO
+  // ==========================================
+
   Future<Map<String, dynamic>> enviarCodigo(RecuperarModel recuperar) async {
     final url = Uri.parse('${ApiConfig.baseUrl}/enviarcodigo');
 
@@ -16,54 +20,60 @@ class RecuperarService {
         body: jsonEncode(recuperar.toJson()),
       );
 
+      print('STATUS ENVIAR CÓDIGO: ${response.statusCode}');
+      print('RESPUESTA ENVIAR CÓDIGO: ${response.body}');
+
       final contentType = response.headers['content-type'] ?? '';
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        return jsonDecode(response.body);
+      }
 
-        return responseData;
-      } else {
-        if (contentType.contains('application/json')) {
-          final Map<String, dynamic> errorData = jsonDecode(response.body);
+      if (contentType.contains('application/json')) {
+        final errorData = jsonDecode(response.body);
 
-          final String mensajeError =
-              errorData['error'] ??
+        throw Exception(
+          errorData['error'] ??
               errorData['mensaje'] ??
               errorData['message'] ??
-              'No se pudo enviar el código';
-
-          throw Exception(mensajeError);
-        } else {
-          throw Exception(
-            'Servidor no disponible o ruta no encontrada '
-            '(Código ${response.statusCode})',
-          );
-        }
+              'No se pudo enviar el código',
+        );
       }
+
+      throw Exception(
+        'Servidor no disponible '
+        '(Código ${response.statusCode})',
+      );
     } catch (e) {
-      throw Exception(e.toString().replaceAll('Exception: ', ''));
+      throw Exception(e.toString().replaceFirst('Exception: ', ''));
     }
   }
 
+  // ==========================================
+  // VERIFICAR CÓDIGO Y CAMBIAR CONTRASEÑA
+  // ==========================================
 
-// VERIFICAR CÓDIGO
-Future<Map<String, dynamic>> verificarCodigo(
-  VerificarCodigoModel verificar,
-) async {
-  final url = Uri.parse('${ApiConfig.baseUrl}/verificarcodigo');
+  Future<Map<String, dynamic>> verificarCodigo(
+    VerificarCodigoModel verificar,
+  ) async {
+    final url = Uri.parse('${ApiConfig.baseUrl}/verificarcodigo');
 
-  try {
-    final response = await http.post(
-      url,
-      headers: ApiConfig.headers,
-      body: jsonEncode(verificar.toJson()),
-    );
+    try {
+      final response = await http.post(
+        url,
+        headers: ApiConfig.headers,
+        body: jsonEncode(verificar.toJson()),
+      );
 
-    final contentType = response.headers['content-type'] ?? '';
+      print('STATUS VERIFICAR: ${response.statusCode}');
+      print('RESPUESTA VERIFICAR: ${response.body}');
 
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return jsonDecode(response.body);
-    } else {
+      final contentType = response.headers['content-type'] ?? '';
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return jsonDecode(response.body);
+      }
+
       if (contentType.contains('application/json')) {
         final errorData = jsonDecode(response.body);
 
@@ -73,15 +83,14 @@ Future<Map<String, dynamic>> verificarCodigo(
               errorData['message'] ??
               'Código incorrecto',
         );
-      } else {
-        throw Exception(
-          'Servidor no disponible '
-          '(Código ${response.statusCode})',
-        );
       }
+
+      throw Exception(
+        'Servidor no disponible '
+        '(Código ${response.statusCode})',
+      );
+    } catch (e) {
+      throw Exception(e.toString().replaceFirst('Exception: ', ''));
     }
-  } catch (e) {
-    throw Exception(e.toString().replaceFirst('Exception: ', ''));
   }
-}
 }
