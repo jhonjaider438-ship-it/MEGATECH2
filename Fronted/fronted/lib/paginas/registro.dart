@@ -73,7 +73,7 @@ class _RegistroState extends State<Registro> {
 
     // 5. Enviar al backend
     try {
-      await userservice().registrar(usuario);
+      await Userservice().registrar(usuario);
 
       if (!mounted) return;
 

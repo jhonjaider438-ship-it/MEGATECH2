@@ -9,10 +9,10 @@ export const UserModel = {
 };
 
 // crear nuevo usuario
-export const crearuser = async (cedula,nombre,apellido,telefono,correo,contraseña,rol,codigoVerficacion,codigoVerificacionExpiracion) => {
+export const crearuser = async (cedula,nombre,apellido,telefono,correo,contraseña,rol) => {
     const {data,error} = await supabase
     .from('usuarios')
-    .insert([{cedula,nombre,apellido,telefono,correo,contraseña,rol,codigoVerficacion,codigoVerificacionExpiracion}])
+    .insert([{cedula,nombre,apellido,telefono,correo,contraseña,rol}])
     .select();
     return {data,error};
 };

@@ -2,6 +2,7 @@ import express from "express";
 
 import {listarProductos,obtenerProducto,crear,actualizar,eliminar,bajoStock} from "../controller/productos.js";
 import { verificarToken, verificarRol } from "../middleware/auth.js";
+import { cloudinary, upload } from "../config/claudinary.js";
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ router.post(
     "/crear",
     verificarToken,
     verificarRol("Admin"),
+    upload.single("file"),
     crear
 );
 
@@ -22,6 +24,7 @@ router.put(
     "/actualizar/:id",
     verificarToken,
     verificarRol("Admin"),
+    upload.single("file"),
     actualizar
 );
 
