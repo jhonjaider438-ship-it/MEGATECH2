@@ -11,6 +11,8 @@ import pedidosRouter from './routes/pedidos.js';
 import detallePedidoRouter from './routes/detalle_pedido.js';
 import vetasRouter from './routes/ventas.js'
 import comproRouter from './routes/comprobante.js'
+import ialaboralRouter from './routes/ialaboral.js'
+import iaclieRouter from './routes/iaclie.js'
 import cors from 'cors';
 
 // cargar las variables de entorno
@@ -56,6 +58,12 @@ app.use('/ventas', vetasRouter);
 
 // rutas de los comprobantes
 app.use('/compro', comproRouter);
+
+// rutas de la ia laboral
+app.use('/ialaboral', ialaboralRouter);
+
+// ruta de la ia de clientes
+app.use('/iaclie', iaclieRouter);
 
 // configuramos el puerto
 const PORT = 3000;
