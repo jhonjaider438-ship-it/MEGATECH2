@@ -124,4 +124,60 @@ Roles usados en el middleware:
 - `Admin`
 
 ---
+## Flujos importantes
+
+### 1. Registro y verificación
+
+1. `POST /auth/registro` → crea usuario inactivo + envía código (Brevo).
+2. `POST /auth/verify-account` con `{ correo, codigo }` → activa la cuenta.
+
+### 2. Pedido online
+
+1. Cliente autenticado → `POST /pedidos/crear`.
+2. Se valida stock, se crea pedido + detalles y se descuenta inventario.
+3. Estado inicial: `Por pagar`.
+4. Cliente sube comprobante → `POST /compro`.
+5. Admin cambia estado a `Por entregar` → se envía correo de confirmación.
+6. Admin cambia a `Entregado`.
+
+### 3. Venta en tienda
+
+1. Admin/Empleado → `POST /ventas` con cédula del cliente, id del vendedor y productos.
+2. Se valida stock, se registra venta + detalles y se descuenta inventario.
+
+### 4. Stock bajo
+
+Al actualizar un producto, si `stock ≤ 5` se notifica por correo a todos los usuarios con rol `Admin` o `Empleado`.
+
+---
+
+## Notas de seguridad y buenas prácticas
+
+- Nunca expongas el `.env` ni claves de servicio en el repositorio.
+- Preferible usar la **service role key** de Supabase solo en el backend (nunca en el frontend).
+- Los tokens JWT expiran en 1 hora; el frontend debe manejar el refresh o re-login.
+- Las rutas de creación de productos y comprobantes usan multer en memoria; el límite actual es 50 MB.
+- Revisa que el preset de Cloudinary esté configurado correctamente (unsigned o firmado según el flujo que uses).
+
+---
+
+## Scripts disponibles
+
+```json
+"start": "node index.js",
+"dev": "nodemon index.js"
+```
+
+---
+
+## Autor / Proyecto
+
+**Megatech2** – Sistema de Gestión de Inventario y Tienda Tecnológica  
+Backend API v1.0.0
+
+---
+
+## Licencia
+
+ISC
 
