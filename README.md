@@ -47,41 +47,6 @@ cd megatech2
 npm install
 ```
 
----
-
-## Variables de entorno
-
-Crea un archivo `.env` en la raíz del proyecto (no se sube a Git):
-
-```env
-# Servidor
-PORT=3000
-
-# Supabase
-SUPABASE_URL=https://xxxx.supabase.co
-SUPABASE_KEY=tu_supabase_anon_o_service_key
-
-# JWT
-JWT_SECRET=una_clave_secreta_muy_segura
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=tu_cloud_name
-CLOUDINARY_API_KEY=tu_api_key
-CLOUDINARY_API_SECRET=tu_api_secret
-
-# Correo (Nodemailer / Gmail)
-EMAIL_USER=tu_correo@gmail.com
-EMAIL_PASS=tu_app_password
-
-# Brevo (verificación de cuenta)
-BREVO_API_KEY=tu_brevo_api_key
-EMAIL_FROM_ALCRIS=Megatech2
-```
-
-> **Nota:** En el código de comprobantes se usa un upload preset de Cloudinary (`ml_default`). Configúralo como *Unsigned* en el dashboard de Cloudinary si usas ese flujo.
-
----
-
 ## Ejecución
 
 ```bash
