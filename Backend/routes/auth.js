@@ -1,5 +1,5 @@
 import express from 'express';
-import { registro, login, verificarCuenta } from '../controller/auth.js';
+import { registro, login, verificarCuenta, reenviarCodigo } from '../controller/auth.js';
 import { enviarcorreo, verificode } from '../controller/recuperar.js';
 
 const router = express.Router();
@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/registro', registro);
 router.post('/login', login);
 router.post('/verify-account', verificarCuenta);
+router.post('/reenviar-codigo', reenviarCodigo);
 
 // ruta para recuperar contraseña
 router.post('/enviarcodigo', enviarcorreo);
