@@ -27,7 +27,6 @@ export const obtenercorreo = async (correo) => {
     return {data,error};
 };
 
-
 // obtener un usuario por id
 export const porid = async (id) => {
     const {data,error} = await supabase
