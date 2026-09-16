@@ -6,6 +6,7 @@ import { crearVenta, crearDetalleVenta, obtenerProducto, actualizarStock, obtene
 export const registrarVenta = async (req, res) => {
 
     try {
+        console.log("BODY RECIBIDO:", req.body);
 
         const { cedula_cliente, id_vendedor, productos } = req.body;
 
