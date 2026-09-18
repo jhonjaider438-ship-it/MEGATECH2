@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:fronted/components/login/botonaaccionprincipal.dart';
+import 'package:fronted/components/login/botondevolver.dart';
+import 'package:fronted/components/login/contenedorformulario.dart';
+import 'package:fronted/components/login/datosprotejidos.dart';
+import 'package:fronted/components/login/encabesado.dart';
+import 'package:fronted/components/login/fondo.dart';
+import 'package:fronted/components/login/leertexto.dart';
+import 'package:fronted/components/login/notienesregister.dart';
+import 'package:fronted/components/login/recorolvi.dart';
 import '../service/confiuser.dart';
 import '../paginas/admin/homeadmin.dart';
 import '../paginas/cliente/homeclie.dart';
@@ -52,7 +60,9 @@ class _LoginState extends State<Login> {
       } else if (usuario.rol == 'Admin') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) =>  Homeadmin(nombre: usuario.nombre ?? '' ),),
+          MaterialPageRoute(
+            builder: (context) => Homeadmin(nombre: usuario.nombre ?? ''),
+          ),
         );
       } else {
         ScaffoldMessenger.of(
@@ -75,295 +85,93 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
+  void _irARecuperarContrasena() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Recuperapass()),
+    );
+  }
+
+  void _irARegistro() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Registro()),
+    );
+  }
+
+  void _alternarVisibilidadContrasena() {
+    setState(() => ocultarContrasena = !ocultarContrasena);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        // FONDO
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF173A55), Color(0xFF0B202E), Color(0xFF06141D)],
-          ),
-        ),
+      body: Fondo(
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
             child: Column(
               children: [
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 54,
-                      height: 43,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF29B6F6), Color(0xFF0288D1)],
-                        ),
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(15),
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Center(
-                            child: Icon(
-                              Icons.undo,
-                              color: Colors.white,
-                              size: 27,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  children: [Botondevolver()],
                 ),
                 const SizedBox(height: 20),
-                
 
-                // Tarjeta del login
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 17,
-                    vertical: 18,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF202A39),
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(
-                      color: const Color(0xFF20BFFF),
-                      width: 1,
-                    ),
-                  ),
+                Contenedorformulario(
                   child: Column(
                     children: [
-                      const Icon(
-                        Icons.person_outline,
-                        color: Colors.white,
-                        size: 65,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Bienvenido de vuelta',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 21,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        'Inicia sesion en tu cuenta de megatech 2',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 11,
-                        ),
+                      const Encabesado(
+                        title: 'Bienvenido de vuelta',
+                        subtitle: 'Inicia sesion en tu cuenta de megatech 2',
                       ),
                       const SizedBox(height: 28),
 
-                      // Correo electrónico
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Correo electronico',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      TextField(
+                      Leertexto(
+                        label: 'Correo electronico',
                         controller: correoController,
                         keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(11),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 18),
 
-                      // Contraseña
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Contraseña',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      TextField(
+                      Leertexto(
+                        label: 'Contraseña',
                         controller: contrasenaController,
                         obscureText: ocultarContrasena,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: Colors.white,
-
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                ocultarContrasena = !ocultarContrasena;
-                              });
-                            },
-                            icon: Icon(
-                              ocultarContrasena
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
-                              color: Colors.black,
-                            ),
-                          ),
-
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(11),
-                            borderSide: BorderSide.none,
+                        suffixIcon: IconButton(
+                          onPressed: _alternarVisibilidadContrasena,
+                          icon: Icon(
+                            ocultarContrasena
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: Colors.black,
                           ),
                         ),
                       ),
                       const SizedBox(height: 8),
 
-                      // Recordarme y Olvidaste contraseña
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: recordarme,
-                                onChanged: (value) {
-                                  setState(() {
-                                    recordarme = value ?? false;
-                                  });
-                                },
-                              ),
-                              Text(
-                                'Recordarme',
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 9,
-                                ),
-                              ),
-                            ],
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Recuperapass(),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              '¿Olvidaste la contraseña?',
-                              style: GoogleFonts.poppins(
-                                color: const Color(0xFF2196F3),
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Recorolvi(
+                        value: recordarme,
+                        onChanged: (value) =>
+                            setState(() => recordarme = value),
+                        onForgotPassword: _irARecuperarContrasena,
                       ),
                       const SizedBox(height: 8),
 
-                      // Botón de iniciar sesión
-                      GestureDetector(
+                      Botonaaccionprincipal(
+                        text: 'Iniciar sesion',
                         onTap: iniciarSesion,
-                        child: Container(
-                          width: 185,
-                          height: 42,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF29B6F6), Color(0xFF0288D1)],
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Iniciar sesion',
-                              style: GoogleFonts.acme(
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 25),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '¿No tienes cuenta?',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Registro(),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'Registrate aqui',
-                              style: GoogleFonts.poppins(
-                                color: const Color(0xFF2196F3),
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
+                      Notienesregister(
+                        question: '¿No tienes cuenta?',
+                        actionText: 'Registrate aqui',
+                        onTap: _irARegistro,
                       ),
                       const SizedBox(height: 17),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.lock_outline,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 5),
-                          Flexible(
-                            child: Text(
-                              'Tus datos estan protegidos con nivel de incriptacion empresarial',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 8,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      const Datosprotejidos(),
                     ],
                   ),
                 ),
