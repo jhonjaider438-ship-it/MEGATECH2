@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../model/recuperapass.dart';
 import '../service/recuperapass.dart';
-import 'screen/codigoverificacion.dart';
 import 'screen/recuperapass.dart';
 
 class Recuperapass extends StatefulWidget {

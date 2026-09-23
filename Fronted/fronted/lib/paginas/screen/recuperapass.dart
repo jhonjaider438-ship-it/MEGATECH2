@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'codigoverificacion.dart';
-import 'recuperapass.dart';
 
 class CodigoEnviado extends StatelessWidget {
   final String correo;
