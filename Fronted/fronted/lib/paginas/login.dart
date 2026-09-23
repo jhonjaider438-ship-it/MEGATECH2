@@ -61,7 +61,13 @@ class _LoginState extends State<Login> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => Homeadmin(nombre: usuario.nombre ?? ''),
+            builder: (context) => Homeadmin(
+              cedula: usuario.cedula ?? '',
+              nombre: usuario.nombre ?? '',
+              apellido: usuario.apellido ?? '',
+              telefono: usuario.telefono ?? '',
+              correo: usuario.correo ?? '',
+            ),
           ),
         );
       } else {

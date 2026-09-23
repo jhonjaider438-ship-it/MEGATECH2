@@ -35,9 +35,7 @@ class _VerificarCuentaState extends State<VerificarCuenta> {
   }
 
   void _mensaje(String texto) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(texto)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(texto)));
   }
 
   Future<void> _verificar() async {
