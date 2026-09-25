@@ -55,7 +55,15 @@ class _LoginState extends State<Login> {
       } else if (usuario.rol == 'Empleado') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Homeemple()),
+          MaterialPageRoute(
+            builder: (context) => Homeemple(
+              cedula: usuario.cedula ?? '',
+              nombre: usuario.nombre ?? '',
+              apellido: usuario.apellido ?? '',
+              telefono: usuario.telefono ?? '',
+              correo: usuario.correo ?? '',
+            ),
+          ),
         );
       } else if (usuario.rol == 'Admin') {
         Navigator.pushReplacement(

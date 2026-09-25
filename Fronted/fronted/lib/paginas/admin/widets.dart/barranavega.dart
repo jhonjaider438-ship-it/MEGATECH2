@@ -1,37 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:fronted/paginas/admin/perfil.dart';
+class BotonNav {
+  final IconData icon;
+  final double size;
+  final VoidCallback? onTap;
 
-/// Barra de navegacion fija en la parte baja de la pantalla, con los
-/// accesos a Perfil y al asistente IA. Se usa como `bottomNavigationBar`
-/// del Scaffold, por lo que queda siempre visible aunque el contenido de
-/// la pantalla haga scroll.
+  const BotonNav({required this.icon, this.size = 26, this.onTap});
+}
 class Barranavegacioninferior extends StatelessWidget {
-  final String cedula;
-  final String nombre;
-  final String apellido;
-  final String telefono;
-  final String correo;
-  final VoidCallback? onPerfilTap;
-  final VoidCallback? onIaTap;
+  final List<BotonNav> botones;
+  final double espacioEntreBotones;
 
   const Barranavegacioninferior({
     super.key,
-    required this.cedula,
-    required this.nombre,
-    required this.apellido,
-    required this.telefono,
-    required this.correo,
-    this.onPerfilTap,
-    this.onIaTap,
+    required this.botones,
+    this.espacioEntreBotones = 24,
   });
 
-  Widget _boton({
-    required IconData icon,
-    required double size,
-    required VoidCallback? onTap,
-  }) {
+  Widget _boton(BotonNav boton) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: boton.onTap,
       child: Container(
         width: 48,
         height: 48,
@@ -41,7 +28,7 @@ class Barranavegacioninferior extends StatelessWidget {
             colors: [Color(0xFF29B6F6), Color(0xFF0288D1)],
           ),
         ),
-        child: Icon(icon, color: Colors.white, size: size),
+        child: Icon(boton.icon, color: Colors.white, size: boton.size),
       ),
     );
   }
@@ -60,26 +47,10 @@ class Barranavegacioninferior extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _boton(icon: Icons.smart_toy, size: 26, onTap: onIaTap),
-              const SizedBox(width: 24),
-              _boton(
-                icon: Icons.person,
-                size: 28,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Perfil(
-                        cedula: cedula,
-                        nombre: nombre,
-                        apellido: apellido,
-                        telefono: telefono,
-                        correo: correo,
-                      ),
-                    ),
-                  );
-                },
-              ),
+              for (int i = 0; i < botones.length; i++) ...[
+                if (i > 0) SizedBox(width: espacioEntreBotones),
+                _boton(botones[i]),
+              ],
             ],
           ),
         ),

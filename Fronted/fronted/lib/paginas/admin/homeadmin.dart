@@ -9,6 +9,8 @@ import 'package:fronted/paginas/admin/pedidos.dart';
 import 'package:fronted/paginas/admin/registarventas.dart';
 import 'package:fronted/paginas/admin/revisarinventario.dart';
 import 'package:fronted/paginas/admin/veririfcartrnsferencias.dart';
+import 'package:fronted/paginas/admin/chacbot.dart';
+import 'package:fronted/paginas/admin/perfil.dart';
 import 'package:fronted/paginas/admin/widets.dart/barranavega.dart';
 import 'package:fronted/paginas/admin/widets.dart/targetasesta.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -108,11 +110,26 @@ class _HomeadminState extends State<Homeadmin> {
     return Scaffold(
       // Fija, siempre visible aunque el contenido haga scroll
       bottomNavigationBar: Barranavegacioninferior(
-        cedula: widget.cedula,
-        nombre: widget.nombre,
-        apellido: widget.apellido,
-        telefono: widget.telefono,
-        correo: widget.correo,
+        botones: [
+          BotonNav(
+            icon: Icons.smart_toy,
+            size: 26,
+            onTap: () => _ir(const Chacbot()),
+          ),
+          BotonNav(
+            icon: Icons.person,
+            size: 28,
+            onTap: () => _ir(
+              Perfil(
+                cedula: widget.cedula,
+                nombre: widget.nombre,
+                apellido: widget.apellido,
+                telefono: widget.telefono,
+                correo: widget.correo,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Fondo(
         child: SafeArea(
