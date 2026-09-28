@@ -3,6 +3,7 @@ import 'package:fronted/components/login/fondo.dart';
 import 'package:fronted/paginas/admin/perfil.dart';
 import 'package:fronted/paginas/admin/widets.dart/barranavega.dart';
 import 'package:fronted/paginas/cliente/components/carrusel.dart';
+import 'package:fronted/paginas/cliente/components/encabesadosinico.dart';
 import 'package:fronted/paginas/cliente/iacliente.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -64,54 +65,71 @@ class _HomeclieState extends State<Homeclie> {
       ),
       body: Fondo(
         child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 36,
-                  vertical: 20,
-                ),
-                child: Center(
-                  child: Text(
-                    'Megatech 2',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 36,
+                    vertical: 20,
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: TextField(
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: 'Buscar productos...',
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Color(0xFF20BFFF),
-                    ),
-                    filled: true,
-                    fillColor: const Color(0xFF202A39),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 15),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: const BorderSide(
-                        color: Color(0xFF20BFFF),
-                        width: 1.5,
+                  child: Center(
+                    child: Text(
+                      'Megatech 2',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ),
-              ),
-              const Carrusel(),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Buscar productos...',
+                      hintStyle: TextStyle(
+                        color: Colors.white.withOpacity(0.6),
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Color(0xFF20BFFF),
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFF202A39),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF20BFFF),
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const Carrusel(),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 15,
+                    right: 15,
+                    top: 0,
+                    bottom: 15,
+                  ),
+                  child: EncabesadoSinIcono(
+                    title: 'Nuestros productos mas comprados',
+                    subtitle:
+                        'Aqui encontraras nuestros productos mas comprados',
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

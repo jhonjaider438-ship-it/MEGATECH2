@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fronted/paginas/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fronted/components/Bienvenida/fondo.dart';
 import 'package:fronted/components/Bienvenida/texto_degradado.dart';
@@ -56,7 +57,15 @@ class _BienvenidaState extends State<Bienvenida> {
 
                 const Spacer(flex: 3),
 
-                BotonDegradado(texto: 'Explorar tienda', onTap: () {}),
+                BotonDegradado(
+                  texto: 'Explorar tienda',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Login()),
+                    );
+                  },
+                ),
 
                 const SizedBox(height: 100),
               ],
