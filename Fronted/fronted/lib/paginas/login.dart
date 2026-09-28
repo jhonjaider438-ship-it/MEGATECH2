@@ -50,7 +50,13 @@ class _LoginState extends State<Login> {
       if (usuario.rol == 'Cliente') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Homeclie()),
+          MaterialPageRoute(builder: (context) => Homeclie(
+            cedula: usuario.cedula ?? '',
+              nombre: usuario.nombre ?? '',
+              apellido: usuario.apellido ?? '',
+              telefono: usuario.telefono ?? '',
+              correo: usuario.correo ?? '',
+          )),
         );
       } else if (usuario.rol == 'Empleado') {
         Navigator.pushReplacement(
