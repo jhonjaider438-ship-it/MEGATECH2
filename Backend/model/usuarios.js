@@ -23,7 +23,7 @@ export const obtenercorreo = async (correo) => {
     .from('usuarios')
     .select('*')
     .eq('correo', correo)
-    .single();
+    .maybeSingle();
     return {data,error};
 };
 

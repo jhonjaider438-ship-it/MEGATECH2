@@ -7,7 +7,8 @@ const router = express.Router();
 
 router.get("/", listarProductos);
 
-router.get("/bajo-stock", bajoStock);
+router.get("/bajo-stock",verificarToken,
+    verificarRol("Admin","Empleado"), bajoStock);
 
 router.get("/obtener/:id", obtenerProducto);
 
