@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'codigoverificacion.dart';
+import 'verificarcodigo.dart';
 
 class CodigoEnviado extends StatelessWidget {
   final String correo;

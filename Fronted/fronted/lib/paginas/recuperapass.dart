@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import '../model/recuperapass.dart';
 import '../service/recuperapass.dart';
-import 'screen/recuperapass.dart';
+import 'screen/codigoenviado.dart';
+import 'package:fronted/components/Bienvenida/fondo.dart';
+import 'package:fronted/components/Bienvenida/boton_degradado.dart';
+import 'package:fronted/components/rescuperar_contra/BotonRegresarDegradado.dart';
+import 'package:fronted/components/rescuperar_contra/TarjetaFormulario.dart';
+import 'package:fronted/components/rescuperar_contra/CampoTexto.dart';
 
 class Recuperapass extends StatefulWidget {
   const Recuperapass({super.key});
@@ -12,7 +17,6 @@ class Recuperapass extends StatefulWidget {
 
 class _RecuperapassState extends State<Recuperapass> {
   final TextEditingController emailController = TextEditingController();
-
   final RecuperarService recuperarService = RecuperarService();
 
   Future<void> enviarCodigo() async {
@@ -31,12 +35,10 @@ class _RecuperapassState extends State<Recuperapass> {
     try {
       final recuperar = RecuperarModel(correo: correo);
 
-      // Enviar código al backend
-      final respuesta = await recuperarService.enviarCodigo(recuperar);
+      await recuperarService.enviarCodigo(recuperar);
 
       if (!mounted) return;
 
-      // Ir a pantalla "Código enviado"
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => CodigoEnviado(correo: correo)),
@@ -56,61 +58,27 @@ class _RecuperapassState extends State<Recuperapass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        // Fondo degradado de azul oscuro a casi negro
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF0F2B48), Color(0xFF0B1928), Color(0xFF050B12)],
-          ),
-        ),
+      body: FondoDegradado(
+        colores: const [
+          Color(0xFF0F2B48),
+          Color(0xFF0B1928),
+          Color(0xFF050B12),
+        ],
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 16),
-                // Botón de regresar con degradado
-                InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  borderRadius: BorderRadius.circular(100),
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF00C6FF), Color(0xFF0072FF)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.reply, // O Icons.arrow_back
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                  ),
+
+                BotonRegresarDegradado(
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
 
                 const Spacer(),
 
-                // Tarjeta central
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 32.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0D223A).withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(28.0),
-                    border: Border.all(
-                      color: const Color(0xFF00D2FF),
-                      width: 1.5,
-                    ),
-                  ),
+                TarjetaFormulario(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -123,9 +91,11 @@ class _RecuperapassState extends State<Recuperapass> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+
                       const SizedBox(height: 12),
+
                       const Text(
-                        'Porfavor digite el correo electronico que esta ligado  a su cuenta de megatech 2',
+                        'Por favor digite el correo electrónico que está ligado a su cuenta de Megatech 2.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white70,
@@ -133,13 +103,13 @@ class _RecuperapassState extends State<Recuperapass> {
                           height: 1.3,
                         ),
                       ),
+
                       const SizedBox(height: 28),
 
-                      // Label Correo
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Correo electronico',
+                          'Correo electrónico',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -147,57 +117,25 @@ class _RecuperapassState extends State<Recuperapass> {
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 10),
 
-                      // Campo de texto (Input)
-                      TextField(
+                      CampoTexto(
                         controller: emailController,
-                        style: const TextStyle(color: Colors.black),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: const Color(0xFFD3D3D3),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 14,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                        label: 'Correo electrónico',
+                        icon: Icons.email_outlined,
+                        keyboardType: TextInputType.emailAddress,
                       ),
+
                       const SizedBox(height: 32),
 
-                      // Botón Enviar con gradiente
-                      Container(
-                        width: double.infinity,
+                      BotonDegradado(
+                        texto: 'Enviar',
+                        onTap: enviarCodigo,
                         height: 48,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.0),
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF00C6FF), Color(0xFF0072FF)],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                        ),
-                        child: ElevatedButton(
-                          onPressed: enviarCodigo,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.0),
-                            ),
-                          ),
-                          child: const Text(
-                            'Enviar',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        borderRadius: 24,
+                        colores: const [Color(0xFF00C6FF), Color(0xFF0072FF)],
+                        colorTexto: Colors.black,
                       ),
                     ],
                   ),

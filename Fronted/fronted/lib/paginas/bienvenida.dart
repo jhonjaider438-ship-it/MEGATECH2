@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../paginas/login.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fronted/components/Bienvenida/fondo.dart';
+import 'package:fronted/components/Bienvenida/texto_degradado.dart';
+import 'package:fronted/components/Bienvenida/boton_degradado.dart';
 
 class Bienvenida extends StatefulWidget {
   const Bienvenida({super.key});
@@ -13,23 +15,7 @@ class _BienvenidaState extends State<Bienvenida> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-
-        // FONDO
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF173A55),
-              Color(0xFF0B202E),
-              Color(0xFF06141D),
-            ],
-          ),
-        ),
-
+      body: FondoDegradado(
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -48,41 +34,11 @@ class _BienvenidaState extends State<Bienvenida> {
 
                 const SizedBox(height: 4),
 
-                ShaderMask(
-                  shaderCallback: (bounds) => const LinearGradient(
-                    colors: [
-                      Color(0xFF29B6F6),
-                      Color(0xFF0288D1),
-                    ],
-                  ).createShader(bounds),
-                  child: const Text(
-                    'Megatech',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 34,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                const TextoDegradado(texto: 'Megatech', fontSize: 34),
 
                 const SizedBox(height: 8),
 
-                ShaderMask(
-                  shaderCallback: (bounds) => const LinearGradient(
-                    colors: [
-                      Color(0xFF29B6F6),
-                      Color(0xFF0288D1),
-                    ],
-                  ).createShader(bounds),
-                  child: const Text(
-                    '2',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                const TextoDegradado(texto: '2', fontSize: 32),
 
                 const SizedBox(height: 24),
 
@@ -100,47 +56,7 @@ class _BienvenidaState extends State<Bienvenida> {
 
                 const Spacer(flex: 3),
 
-                // BOTÓN
-                Container(
-                  width: double.infinity,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFF29B6F6),
-                        Color(0xFF0288D1),
-                      ],
-                    ),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(30),
-
-                      // IR A LOGIN
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Login(),
-                          ),
-                        );
-                      },
-
-                      child: Center(
-                        child: Text(
-                          'Explorar tienda',
-                          style: GoogleFonts.acme(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                BotonDegradado(texto: 'Explorar tienda', onTap: () {}),
 
                 const SizedBox(height: 100),
               ],
