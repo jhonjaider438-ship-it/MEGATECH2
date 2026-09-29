@@ -7,7 +7,6 @@ import 'package:fronted/components/login/encabesado.dart';
 import 'package:fronted/components/login/fondo.dart';
 import 'package:fronted/components/login/leertexto.dart';
 import 'package:fronted/components/login/notienesregister.dart';
-import 'package:fronted/paginas/admin/registarventas.dart';
 import 'package:fronted/paginas/correodestacado.dart';
 import 'package:fronted/paginas/screen/register.dart';
 import 'package:fronted/service/confiuser.dart';
