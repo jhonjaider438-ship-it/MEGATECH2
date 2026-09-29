@@ -121,6 +121,7 @@ class _VerificarCodigoState extends State<VerificarCodigo> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -129,128 +130,145 @@ class _VerificarCodigoState extends State<VerificarCodigo> {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-            child: Column(
-              children: [
-                BotonRegresarDegradado(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
                 ),
-
-                const SizedBox(height: 35),
-
-                TarjetaFormulario(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight - 40,
+                  ),
                   child: Column(
                     children: [
-                      const IconoCirculoDegradado(icono: Icons.verified_user),
+                      BotonRegresarDegradado(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 35),
 
-                      const Text(
-                        'Verificación de código',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold,
+                      TarjetaFormulario(
+                        child: Column(
+                          children: [
+                            const IconoCirculoDegradado(
+                              icono: Icons.verified_user,
+                            ),
+
+                            const SizedBox(height: 20),
+
+                            const Text(
+                              'Verificación de código',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 23,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            const Text(
+                              'Hemos enviado un código de 6 dígitos '
+                              'a tu correo electrónico.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                                height: 1.4,
+                              ),
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            Text(
+                              widget.correo,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Color(0xFF29B6F6),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(height: 30),
+
+                            CampoTexto(
+                              controller: codigoController,
+                              label: 'Código de verificación',
+                              icon: Icons.pin,
+                              keyboardType: TextInputType.number,
+                            ),
+
+                            const SizedBox(height: 18),
+
+                            CampoTexto(
+                              controller: nuevaContrasenaController,
+                              label: 'Nueva contraseña',
+                              icon: Icons.lock,
+                              obscureText: ocultarNueva,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  ocultarNueva
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.black54,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    ocultarNueva = !ocultarNueva;
+                                  });
+                                },
+                              ),
+                            ),
+
+                            const SizedBox(height: 18),
+
+                            CampoTexto(
+                              controller: confirmarContrasenaController,
+                              label: 'Confirmar contraseña',
+                              icon: Icons.lock_outline,
+                              obscureText: ocultarConfirmar,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  ocultarConfirmar
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.black54,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    ocultarConfirmar = !ocultarConfirmar;
+                                  });
+                                },
+                              ),
+                            ),
+
+                            const SizedBox(height: 30),
+
+                            _botonVerificar(),
+
+                            const SizedBox(height: 20),
+
+                            const Text(
+                              'El código tiene una duración de 15 minutos.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      const Text(
-                        'Hemos enviado un código de 6 dígitos '
-                        'a tu correo electrónico.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                          height: 1.4,
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      Text(
-                        widget.correo,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Color(0xFF29B6F6),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      CampoTexto(
-                        controller: codigoController,
-                        label: 'Código de verificación',
-                        icon: Icons.pin,
-                        keyboardType: TextInputType.number,
-                      ),
-
-                      const SizedBox(height: 18),
-
-                      CampoTexto(
-                        controller: nuevaContrasenaController,
-                        label: 'Nueva contraseña',
-                        icon: Icons.lock,
-                        obscureText: ocultarNueva,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            ocultarNueva
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.black54,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              ocultarNueva = !ocultarNueva;
-                            });
-                          },
-                        ),
-                      ),
-
-                      const SizedBox(height: 18),
-
-                      CampoTexto(
-                        controller: confirmarContrasenaController,
-                        label: 'Confirmar contraseña',
-                        icon: Icons.lock_outline,
-                        obscureText: ocultarConfirmar,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            ocultarConfirmar
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            color: Colors.black54,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              ocultarConfirmar = !ocultarConfirmar;
-                            });
-                          },
-                        ),
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      _botonVerificar(),
-
-                      const SizedBox(height: 20),
-
-                      const Text(
-                        'El código tiene una duración de 15 minutos.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white54, fontSize: 12),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

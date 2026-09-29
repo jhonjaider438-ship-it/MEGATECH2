@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fronted/paginas/login.dart';
 import 'iconocirculodegradado.dart';
 
 class DialogoExito extends StatefulWidget {
@@ -52,8 +53,10 @@ class _DialogoExitoState extends State<DialogoExito> {
             height: 48,
             child: ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF00AEEF),
