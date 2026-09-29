@@ -87,7 +87,7 @@ class _CarruselState extends State<Carrusel> {
           }),
         ),
 
-        const SizedBox(height: 15),
+        const SizedBox(height: 30),
       ],
     );
   }
