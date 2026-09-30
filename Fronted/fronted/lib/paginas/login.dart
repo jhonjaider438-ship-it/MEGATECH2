@@ -48,18 +48,21 @@ class _LoginState extends State<Login> {
       if (!mounted) return;
 
       if (usuario.rol == 'Cliente') {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Homeclie(
-            cedula: usuario.cedula ?? '',
+          MaterialPageRoute(
+            builder: (context) => Homeclie(
+              cedula: usuario.cedula ?? '',
               nombre: usuario.nombre ?? '',
               apellido: usuario.apellido ?? '',
               telefono: usuario.telefono ?? '',
               correo: usuario.correo ?? '',
-          )),
+            ),
+          ),
+          (route) => false,
         );
       } else if (usuario.rol == 'Empleado') {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => Homeemple(
@@ -70,9 +73,10 @@ class _LoginState extends State<Login> {
               correo: usuario.correo ?? '',
             ),
           ),
+          (route) => false,
         );
       } else if (usuario.rol == 'Admin') {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (context) => Homeadmin(
@@ -83,6 +87,7 @@ class _LoginState extends State<Login> {
               correo: usuario.correo ?? '',
             ),
           ),
+          (route) => false,
         );
       } else {
         ScaffoldMessenger.of(

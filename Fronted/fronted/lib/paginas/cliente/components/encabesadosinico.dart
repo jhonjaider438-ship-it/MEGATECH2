@@ -16,20 +16,24 @@ class EncabesadoSinIcono extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+        Center(
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         const SizedBox(height: 20),
-        Text(
-          subtitle,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14),
+        Center(
+          child: Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(color: Colors.white70, fontSize: 14),
+          ),
         ),
       ],
     );
