@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // Fondo general 
+  // Fondo general
   static const Color fondoOscuro1 = Color(0xFF173A55);
   static const Color fondoOscuro2 = Color(0xFF0B202E);
   static const Color fondoOscuro3 = Color(0xFF06141D);
@@ -13,7 +13,7 @@ class AppColors {
   static const Color fondoTarjeta = Color(0xFF202A39);
   static const Color bordeTarjeta = Color(0xFF20BFFF);
 
-  // Botones 
+  // Botones
   static const Color azulClaro = Color(0xFF29B6F6);
   static const Color azulOscuro = Color(0xFF0288D1);
   static const Color azulEnlace = Color(0xFF2196F3);
