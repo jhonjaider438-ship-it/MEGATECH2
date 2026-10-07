@@ -68,3 +68,11 @@ export const contarProductosBajoStock = async (umbral = 5) => {
         .select("*", { count: "exact", head: true })
         .lte("stock", umbral);
 };
+
+export const obtenerProductosBajoStock = async (umbral = 5) => {
+    return await supabase
+        .from("productos")
+        .select("id, nombre, descripcion, precio, stock, foto, subcategorias(nombre)")
+        .lte("stock", umbral)
+        .order("stock", { ascending: true });
+};

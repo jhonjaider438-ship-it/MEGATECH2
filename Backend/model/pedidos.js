@@ -75,3 +75,34 @@ export const contarPedidosPorEntregar = async () => {
         .select("*", { count: "exact", head: true })
         .eq("estado", "Por entregar");
 };
+
+export const obtenerPedidosConDetalle = async () => {
+    return await supabase
+        .from("pedidos")
+        .select(`
+            *,
+            detalle_pedido (
+                id,
+                id_producto,
+                cantidad,
+                precio_unitario,
+                subtotal,
+                productos (
+                    id,
+                    nombre,
+                    descripcion,
+                    foto
+                )
+            )
+        `)
+        .order("fecha", { ascending: false });
+};
+ 
+// Datos de contacto de varios clientes a la vez.
+// OJO: se piden solo estas columnas a propósito, para NO enviar la contraseña al celular.
+export const obtenerClientesPorIds = async (ids) => {
+    return await supabase
+        .from("usuarios")
+        .select("id, cedula, nombre, apellido, telefono, correo")
+        .in("id", ids);
+};

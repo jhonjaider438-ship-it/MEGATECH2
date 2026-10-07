@@ -19,7 +19,6 @@ import 'package:fronted/paginas/cliente/electrodomesticos/freidoras.dart';
 import 'package:fronted/paginas/cliente/electrodomesticos/ollaspresion.dart';
 import 'package:fronted/paginas/cliente/electrodomesticos/planchas.dart';
 import 'package:fronted/paginas/cliente/electrodomesticos/sanduicheras.dart';
-import 'package:fronted/paginas/cliente/homeclie.dart';
 import 'package:fronted/paginas/cliente/otros/bolsos.dart';
 import 'package:fronted/paginas/cliente/otros/memorias_sd.dart';
 import 'package:fronted/paginas/cliente/otros/memorias_usb.dart';
@@ -327,7 +326,7 @@ class Menu extends StatelessWidget {
                 _item(
                   context,
                   Icons.lunch_dining,
-                  'Sanducheras',
+                  'sandwichera',
                   const Sanduicheras(),
                   _colorElectro,
                 ),
