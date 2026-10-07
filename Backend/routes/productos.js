@@ -1,5 +1,5 @@
 import express from "express";
-import {listarProductos,obtenerProducto,crear,actualizar,eliminar,bajoStock} from "../controller/productos.js";
+import {listarProductos,obtenerProducto,crear,actualizar,eliminar,bajoStock,listarBajoStock} from "../controller/productos.js";
 import { verificarToken, verificarRol } from "../middleware/auth.js";
 import { cloudinary, upload } from "../config/claudinary.js";
 
@@ -9,6 +9,9 @@ router.get("/", listarProductos);
 
 router.get("/bajo-stock",verificarToken,
     verificarRol("Admin","Empleado"), bajoStock);
+
+    router.get("/bajo-stock/lista", verificarToken,
+    verificarRol("Admin", "Empleado"), listarBajoStock);
 
 router.get("/obtener/:id", obtenerProducto);
 

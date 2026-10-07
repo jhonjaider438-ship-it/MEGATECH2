@@ -88,24 +88,6 @@ class _CarruselState extends State<Carrusel> {
         ),
 
         const SizedBox(height: 30),
-
-        // Título
-        Text(
-          'Imagen ${paginaActual + 1}',
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-
-        const SizedBox(height: 10),
-
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
-          child: Text(
-            'Desliza las imágenes hacia la izquierda o '
-            'derecha para navegar por el carrusel.',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16),
-          ),
-        ),
       ],
     );
   }

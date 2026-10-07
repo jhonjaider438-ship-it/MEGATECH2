@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fronted/paginas/login.dart';
+import 'package:fronted/paginas/cliente/homeclie.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fronted/components/Bienvenida/fondo.dart';
 import 'package:fronted/components/Bienvenida/texto_degradado.dart';
@@ -95,7 +95,7 @@ class _BienvenidaState extends State<Bienvenida> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Login()),
+                        MaterialPageRoute(builder: (context) => Homeclie()),
                       );
                     },
                   ),

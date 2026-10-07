@@ -4,7 +4,8 @@ import {
   crearProducto, 
   actualizarProducto, 
   eliminarProducto, 
-  contarProductosBajoStock 
+  contarProductosBajoStock,
+  obtenerProductosBajoStock 
 } from "../model/productos.js";
 import { obtenerAdminsYEmpleados } from "../model/usuarios.js";
 import { enviarAlertaStock } from '../utils/sendemail.js';
@@ -183,4 +184,14 @@ export const bajoStock = async (req, res) => {
   }
 
   res.json({ total: count });
+};
+
+export const listarBajoStock = async (req, res) => {
+  const { data, error } = await obtenerProductosBajoStock();
+ 
+  if (error) {
+    return res.status(500).json({ error: error.message });
+  }
+ 
+  res.json(data);
 };

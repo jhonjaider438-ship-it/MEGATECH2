@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fronted/colores/stilocolores.dart';
+import 'package:fronted/paginas/cliente/homeclie.dart';
 
 /// Botón circular con degradado que regresa a la pantalla anterior.
 
@@ -23,7 +24,16 @@ class Botondevolver extends StatelessWidget {
         // los toques y pueda realizar funciones
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
-          onTap: onTap ?? () => Navigator.pop(context),
+          onTap: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const Homeclie()),
+              );
+            }
+          },
           child: const Center(
             child: Icon(Icons.undo, color: Colors.white, size: 27),
           ),
