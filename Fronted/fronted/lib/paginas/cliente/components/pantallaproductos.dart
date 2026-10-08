@@ -2,84 +2,98 @@ import 'package:flutter/material.dart';
 import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/components/login/fondo.dart';
 import 'package:fronted/model/productos.dart';
-import 'package:fronted/paginas/admin/widets.dart/barranavega.dart';
 import 'package:fronted/paginas/admin/widets.dart/targetaproducto.dart';
+import 'package:fronted/paginas/cliente/components/menu.dart';
+import 'package:fronted/paginas/cliente/components/targetaproductocliente.dart';
 import 'package:fronted/service/productoservice.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Bajostock extends StatefulWidget {
-  const Bajostock({super.key});
+/// Pantalla reutilizable que lista los productos de UNA subcategoría.
+/// Sirve para cliente y para personal: según el rol del usuario que inició
+/// sesión muestra la tarjeta de cliente (foto, nombre, descripción, precio)
+/// o la de admin (con ID y stock, y también los productos agotados).
+class PantallaProductos extends StatefulWidget {
+  /// Texto que se ve como título de la pantalla.
+  final String titulo;
+
+  /// Nombre de la subcategoría en la base de datos (tabla "subcategorias").
+  final String subcategoria;
+
+  const PantallaProductos({
+    super.key,
+    required this.titulo,
+    required this.subcategoria,
+  });
 
   @override
-  State<Bajostock> createState() => _BajostockState();
+  State<PantallaProductos> createState() => _PantallaProductosState();
 }
 
-class _BajostockState extends State<Bajostock> {
+class _PantallaProductosState extends State<PantallaProductos> {
   final ProductosService _service = ProductosService();
-  late Future<List<Producto>> _futuroProductos;
+  late Future<_Resultado> _futuro;
 
   @override
   void initState() {
     super.initState();
-    _futuroProductos = _service.obtenerListaBajoStock();
+    _futuro = _cargar();
   }
 
-  /// Vuelve a pedir los datos al backend (botón "Reintentar" y pull-to-refresh)
+  /// Primero averigua el rol y luego pide los productos: el cliente solo ve
+  /// los que tienen stock; admin y empleado ven todos.
+  Future<_Resultado> _cargar() async {
+    final rol = await _service.rolActual();
+    final esPersonal = rol == 'Admin' || rol == 'Empleado';
+    final productos = await _service.obtenerPorSubcategoria(
+      widget.subcategoria,
+      soloDisponibles: !esPersonal,
+    );
+    return _Resultado(productos, esPersonal);
+  }
+
   Future<void> _recargar() async {
-    setState(() {
-      _futuroProductos = _service.obtenerListaBajoStock();
-    });
-    await _futuroProductos.catchError((_) => <Producto>[]);
+    setState(() => _futuro = _cargar());
+    await _futuro.catchError((_) => const _Resultado([], false));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Barranavegacioninferior(
-        botones: [
-          BotonNav(
-            icon: Icons.arrow_back,
-            size: 26,
-            onTap: () {
-              Navigator.popUntil(context, (route) => route.isFirst);
-            },
-          ),
-        ],
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
+      drawer: const Menu(),
       body: Fondo(
         child: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 36,
-                  vertical: 20,
-                ),
-                child: Center(
-                  child: Text(
-                    'Megatech 2',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+              const SizedBox(height: kToolbarHeight),
+              Text(
+                'Megatech 2',
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(height: 6),
               Text(
-                'Productos en bajo stock',
+                widget.titulo,
+                textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
                   color: const Color(0xFF1BC2F0),
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 12),
               Expanded(
-                child: FutureBuilder<List<Producto>>(
-                  future: _futuroProductos,
+                child: FutureBuilder<_Resultado>(
+                  future: _futuro,
                   builder: (context, snapshot) {
-                    // 1) Cargando
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(
@@ -88,7 +102,6 @@ class _BajostockState extends State<Bajostock> {
                       );
                     }
 
-                    // 2) Error
                     if (snapshot.hasError) {
                       return _mensaje(
                         icono: Icons.wifi_off_rounded,
@@ -97,16 +110,15 @@ class _BajostockState extends State<Bajostock> {
                       );
                     }
 
-                    // 3) Sin productos en bajo stock
-                    final productos = snapshot.data ?? [];
+                    final resultado = snapshot.data!;
+                    final productos = resultado.productos;
                     if (productos.isEmpty) {
                       return _mensaje(
-                        icono: Icons.check_circle_outline_rounded,
-                        texto: '¡Todo en orden! No hay productos en bajo stock',
+                        icono: Icons.inventory_2_outlined,
+                        texto: 'Por ahora no hay productos en ${widget.titulo}',
                       );
                     }
 
-                    // 4) Lista de tarjetas
                     return RefreshIndicator(
                       color: AppColors.azulClaro,
                       onRefresh: _recargar,
@@ -115,8 +127,9 @@ class _BajostockState extends State<Bajostock> {
                         padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
                         itemCount: productos.length,
                         separatorBuilder: (_, __) => const SizedBox(height: 14),
-                        itemBuilder: (context, i) =>
-                            TarjetaProductoAdmin(producto: productos[i]),
+                        itemBuilder: (context, i) => resultado.esPersonal
+                            ? TarjetaProductoAdmin(producto: productos[i])
+                            : TarjetaProductoCliente(producto: productos[i]),
                       ),
                     );
                   },
@@ -169,4 +182,12 @@ class _BajostockState extends State<Bajostock> {
       ),
     );
   }
+}
+
+/// Productos ya filtrados + si quien mira es personal (admin/empleado).
+class _Resultado {
+  final List<Producto> productos;
+  final bool esPersonal;
+
+  const _Resultado(this.productos, this.esPersonal);
 }

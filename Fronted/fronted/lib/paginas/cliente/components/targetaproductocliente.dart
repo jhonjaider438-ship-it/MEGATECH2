@@ -6,28 +6,11 @@ import 'package:fronted/paginas/admin/widets.dart/targetapedido.dart'
     show FotoCuadrada;
 import 'package:google_fonts/google_fonts.dart';
 
-/// Tarjeta de producto para admin/empleado: foto, ID, stock, nombre,
-/// descripción y precio. El borde y la etiqueta de stock cambian de color
-/// cuando queda poco (<= 5) o está agotado.
-class TarjetaProductoAdmin extends StatelessWidget {
+/// Tarjeta de producto para el cliente: solo foto, nombre, descripción y precio.
+class TarjetaProductoCliente extends StatelessWidget {
   final Producto producto;
 
-  const TarjetaProductoAdmin({super.key, required this.producto});
-
-  static const Color _rojo = Color(0xFFFF5252);
-  static const Color _naranja = Color(0xFFFFA726);
-  static const int _umbralBajoStock = 5; // el mismo que usa el backend
-
-  bool get _agotado => producto.stock <= 0;
-  bool get _bajo => !_agotado && producto.stock <= _umbralBajoStock;
-
-  Color get _colorStock => _agotado
-      ? _rojo
-      : _bajo
-          ? _naranja
-          : AppColors.azulClaro;
-
-  Color get _colorBorde => (_agotado || _bajo) ? _colorStock : AppColors.bordeTarjeta;
+  const TarjetaProductoCliente({super.key, required this.producto});
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +18,9 @@ class TarjetaProductoAdmin extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        color: AppColors.fondoTarjeta,
         borderRadius: BorderRadius.circular(25),
-        border: Border.all(color: _colorBorde, width: 1.5),
+        border: Border.all(color: AppColors.bordeTarjeta, width: 1),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,15 +31,6 @@ class TarjetaProductoAdmin extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 4,
-                  children: [
-                    _chip('ID ${producto.id}', AppColors.azulClaro),
-                    _chip(_textoStock(), _colorStock),
-                  ],
-                ),
-                const SizedBox(height: 6),
                 Text(
                   producto.nombre,
                   maxLines: 2,
@@ -70,7 +44,7 @@ class TarjetaProductoAdmin extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   producto.descripcion,
-                  maxLines: 2,
+                  maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(
                     color: Colors.white70,
@@ -82,7 +56,7 @@ class TarjetaProductoAdmin extends StatelessWidget {
                   formatearPesos(producto.precio),
                   style: GoogleFonts.poppins(
                     color: AppColors.azulClaro,
-                    fontSize: 17,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -90,31 +64,6 @@ class TarjetaProductoAdmin extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  String _textoStock() {
-    if (_agotado) return 'Agotado';
-    if (producto.stock == 1) return '1 unidad';
-    return '${producto.stock} unidades';
-  }
-
-  Widget _chip(String texto, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color, width: 1),
-      ),
-      child: Text(
-        texto,
-        style: GoogleFonts.poppins(
-          color: color,
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-        ),
       ),
     );
   }

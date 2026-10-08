@@ -7,12 +7,12 @@ import 'package:fronted/paginas/admin/gestioncontable.dart';
 import 'package:fronted/paginas/admin/gestiondeusuarios.dart';
 import 'package:fronted/paginas/admin/pedidos.dart';
 import 'package:fronted/paginas/admin/registarventas.dart';
-import 'package:fronted/paginas/admin/revisarinventario.dart';
 import 'package:fronted/paginas/admin/veririfcartrnsferencias.dart';
 import 'package:fronted/paginas/admin/chacbot.dart';
 import 'package:fronted/paginas/admin/perfil.dart';
 import 'package:fronted/paginas/admin/widets.dart/barranavega.dart';
 import 'package:fronted/paginas/admin/widets.dart/targetasesta.dart';
+import 'package:fronted/paginas/cliente/celulares/celulares_redmi.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../admin/widets.dart/targetas.dart';
 import 'package:fronted/service/desboard.dart';
@@ -230,7 +230,7 @@ class _HomeadminState extends State<Homeadmin> {
                           colorTitulo: AppColors.azulClaro,
                           colorBorde: AppColors.bordeTarjeta,
                           textoBoton: 'Colsultar',
-                          onPressed: () => _ir(const Revisarinventario()),
+                          onPressed: () => _ir(const Celularesredmi()),
                         ),
                       ),
 
