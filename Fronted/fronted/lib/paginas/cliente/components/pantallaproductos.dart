@@ -52,7 +52,9 @@ class _PantallaProductosState extends State<PantallaProductos> {
   }
 
   Future<void> _recargar() async {
-    setState(() => _futuro = _cargar());
+    setState(() {
+      _futuro = _cargar();
+    });
     await _futuro.catchError((_) => const _Resultado([], false));
   }
 
