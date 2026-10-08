@@ -47,7 +47,7 @@ class IaClienteService {
   /// Trae el historial guardado de una sesión.
   Future<List<MensajeChat>> obtenerHistorial(String sesionId) async {
     final url = Uri.parse(
-      '${ApiConfig.rootUrl}/iacliente/historial/$sesionId', // <-- ajusta tu ruta
+      '${ApiConfig.rootUrl}/iaclie/historial/$sesionId', // <-- ajusta tu ruta
     );
 
     final response = await http.get(url, headers: await _headers());

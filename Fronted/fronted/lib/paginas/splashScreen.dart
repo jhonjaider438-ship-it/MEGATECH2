@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Espera 8 segundos y cambia de pantalla
+    // Espera 5 segundos y cambia de pantalla
     Future.delayed(const Duration(seconds: 5), () {
       if (!mounted) return;
       Navigator.pushReplacement(
