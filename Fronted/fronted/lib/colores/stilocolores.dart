@@ -30,7 +30,7 @@ class AppColors {
   static const LinearGradient gradienteFondo = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
-    colors: [fondoOscuro1, fondoOscuro2, fondoOscuro3],
+    colors: [fondoOscuro1, Color.fromARGB(255, 11, 32, 46), fondoOscuro3],
   );
 
   static const LinearGradient gradienteBoton = LinearGradient(
