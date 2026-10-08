@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/components/login/fondo.dart';
 import 'package:fronted/model/pedidos.dart';
 import 'package:fronted/paginas/admin/detallepedido.dart';
 import 'package:fronted/paginas/admin/widets.dart/barranavega.dart';
 import 'package:fronted/paginas/admin/widets.dart/targetapedido.dart';
+import 'package:fronted/paginas/cliente/components/barradebusqueda.dart';
 import 'package:fronted/service/pedidos.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,20 +21,57 @@ class _PedidosState extends State<Pedidos> {
   final PedidosService _service = PedidosService();
   late Future<List<Pedido>> _futuroPedidos;
 
+  final TextEditingController _cedulaCtrl = TextEditingController();
+
   /// null = "Todos"
   String? _filtro;
+
+  /// null = sin búsqueda (se muestran todos los pedidos)
+  String? _cedulaBuscada;
+
+  /// Pide todos los pedidos, o solo los del cliente si hay una cédula buscada.
+  Future<List<Pedido>> _cargar() => _cedulaBuscada == null
+      ? _service.obtenerPedidos()
+      : _service.obtenerPedidosPorCedula(_cedulaBuscada!);
 
   @override
   void initState() {
     super.initState();
-    _futuroPedidos = _service.obtenerPedidos();
+    _futuroPedidos = _cargar();
+  }
+
+  @override
+  void dispose() {
+    _cedulaCtrl.dispose();
+    super.dispose();
+  }
+
+  void _buscarPorCedula() {
+    FocusScope.of(context).unfocus();
+    final cedula = _cedulaCtrl.text.trim();
+    if (cedula.isEmpty) {
+      _limpiarBusqueda();
+      return;
+    }
+    setState(() {
+      _cedulaBuscada = cedula;
+      _futuroPedidos = _cargar();
+    });
+  }
+
+  void _limpiarBusqueda() {
+    _cedulaCtrl.clear();
+    setState(() {
+      _cedulaBuscada = null;
+      _futuroPedidos = _cargar();
+    });
   }
 
   /// Vuelve a pedir los datos al backend (Reintentar, pull-to-refresh y
   /// cuando se regresa del detalle, para que se vea lo que quedó en la BD).
   Future<void> _recargar() async {
     setState(() {
-      _futuroPedidos = _service.obtenerPedidos();
+      _futuroPedidos = _cargar();
     });
     await _futuroPedidos.catchError((_) => <Pedido>[]);
   }
@@ -87,7 +126,25 @@ class _PedidosState extends State<Pedidos> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: BarraBusqueda(
+                  controller: _cedulaCtrl,
+                  hintText: 'Buscar por cédula del cliente',
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.search,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onSubmitted: (_) => _buscarPorCedula(),
+                  suffixIcon: _cedulaBuscada == null
+                      ? null
+                      : IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white70),
+                          onPressed: _limpiarBusqueda,
+                        ),
+                ),
+              ),
+              const SizedBox(height: 14),
               _filtros(),
               const SizedBox(height: 12),
               Expanded(
@@ -129,7 +186,9 @@ class _PedidosState extends State<Pedidos> {
                               height: 320,
                               child: _mensaje(
                                 icono: Icons.inbox_outlined,
-                                texto: _filtro == null
+                                texto: _cedulaBuscada != null
+                                    ? 'No hay pedidos para la cédula $_cedulaBuscada'
+                                    : _filtro == null
                                     ? 'Todavía no hay pedidos'
                                     : 'No hay pedidos "$_filtro"',
                               ),

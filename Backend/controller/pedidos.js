@@ -1,5 +1,5 @@
 import { obtenerPedidos,obtenerPedidoPorId,crearPedido,actualizarPedido,eliminarPedido, 
-obtenerPedidosPorCedula, contarPedidosPorEntregar, obtenerPedidosConDetalle, obtenerClientesPorIds } from "../model/pedidos.js";
+obtenerPedidosConDetallePorCedula, contarPedidosPorEntregar, obtenerPedidosConDetalle, obtenerClientesPorIds } from "../model/pedidos.js";
 import { porid as UserModel } from "../model/usuarios.js";
 import {crearDetalle} from "../model/detalle_pedido.js";
 import { actualizarStock } from "../model/productos.js";
@@ -500,16 +500,17 @@ export const pedidosPorCedula = async (req, res) => {
             });
         }
 
-        const { data, error } = await obtenerPedidosPorCedula(cedula);
+        const { data, error } = await obtenerPedidosConDetallePorCedula(cedula);
 
         if (error) {
-            return res.status(404).json({
-                mensaje: "No se encontraron pedidos para esta cédula",
+            return res.status(500).json({
+                mensaje: "Error al buscar los pedidos",
                 error: error.message
             });
         }
 
-        return res.status(200).json(data);
+        // Mismo formato que /pedidos/resumen (cliente, fecha, artículos...)
+        return res.status(200).json(await armarResumen(data));
 
     } catch (error) {
 
@@ -551,55 +552,58 @@ const formatearFechaSegura = (fecha) => {
     });
 };
  
-// GET /pedidos/resumen
-// Devuelve cada pedido con: cliente (nombre, apellido, teléfono), foto del primer
+// Arma, para cada pedido: cliente (nombre, apellido, teléfono), foto del primer
 // producto, cantidad de artículos y la lista completa de artículos.
+// Lo usan /pedidos/resumen y /pedidos/cedula/:cedula
+const armarResumen = async (pedidos) => {
+    // Traer los clientes de todos los pedidos en UNA sola consulta
+    const idsClientes = [...new Set(pedidos.map(p => p.id_cliente).filter(Boolean))];
+    const mapaClientes = {};
+
+    if (idsClientes.length > 0) {
+        const { data: clientes } = await obtenerClientesPorIds(idsClientes);
+        (clientes || []).forEach(c => { mapaClientes[c.id] = c; });
+    }
+
+    return pedidos.map(pedido => {
+        // El "primer producto" es el primer artículo que se guardó en el pedido
+        const detalle = [...(pedido.detalle_pedido || [])]
+            .sort((a, b) => a.id - b.id)
+            .map(d => ({
+                id: d.id,
+                id_producto: d.id_producto,
+                nombre: d.productos?.nombre ?? "Producto eliminado",
+                descripcion: d.productos?.descripcion ?? "",
+                foto: d.productos?.foto ?? null,
+                cantidad: d.cantidad,
+                precio_unitario: d.precio_unitario,
+                subtotal: d.subtotal
+            }));
+
+        const { detalle_pedido, ...datosPedido } = pedido;
+
+        return {
+            ...datosPedido,
+            fecha_formateada: formatearFechaSegura(pedido.fecha),
+            cliente: mapaClientes[pedido.id_cliente] || null,
+            foto_principal: detalle[0]?.foto ?? null,
+            cantidad_articulos: detalle.length,
+            detalle
+        };
+    });
+};
+
+// GET /pedidos/resumen
 export const listarResumen = async (req, res) => {
     try {
         const { data: pedidos, error } = await obtenerPedidosConDetalle();
- 
+
         if (error) {
             return res.status(500).json({ mensaje: "Error al obtener los pedidos", error: error.message });
         }
- 
-        // Traer los clientes de todos los pedidos en UNA sola consulta
-        const idsClientes = [...new Set(pedidos.map(p => p.id_cliente).filter(Boolean))];
-        const mapaClientes = {};
- 
-        if (idsClientes.length > 0) {
-            const { data: clientes } = await obtenerClientesPorIds(idsClientes);
-            (clientes || []).forEach(c => { mapaClientes[c.id] = c; });
-        }
- 
-        const resultado = pedidos.map(pedido => {
-            // El "primer producto" es el primer artículo que se guardó en el pedido
-            const detalle = [...(pedido.detalle_pedido || [])]
-                .sort((a, b) => a.id - b.id)
-                .map(d => ({
-                    id: d.id,
-                    id_producto: d.id_producto,
-                    nombre: d.productos?.nombre ?? "Producto eliminado",
-                    descripcion: d.productos?.descripcion ?? "",
-                    foto: d.productos?.foto ?? null,
-                    cantidad: d.cantidad,
-                    precio_unitario: d.precio_unitario,
-                    subtotal: d.subtotal
-                }));
- 
-            const { detalle_pedido, ...datosPedido } = pedido;
- 
-            return {
-                ...datosPedido,
-                fecha_formateada: formatearFechaSegura(pedido.fecha),
-                cliente: mapaClientes[pedido.id_cliente] || null,
-                foto_principal: detalle[0]?.foto ?? null,
-                cantidad_articulos: detalle.length,
-                detalle
-            };
-        });
- 
-        res.json(resultado);
- 
+
+        res.json(await armarResumen(pedidos));
+
     } catch (error) {
         res.status(500).json({ mensaje: "Error interno del servidor", error: error.message });
     }

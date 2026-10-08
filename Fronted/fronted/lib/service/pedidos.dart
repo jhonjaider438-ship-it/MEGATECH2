@@ -54,6 +54,24 @@ class PedidosService {
     throw PedidoException(_mensajeDe(response, 'Error al obtener los pedidos'));
   }
 
+  /// GET /pedidos/cedula/:cedula -> pedidos de un cliente (mismo formato que resumen).
+  Future<List<Pedido>> obtenerPedidosPorCedula(String cedula) async {
+    final url = Uri.parse(
+      '${ApiConfig.rootUrl}/pedidos/cedula/${Uri.encodeComponent(cedula)}',
+    );
+    final response = await http
+        .get(url, headers: await _headersConToken())
+        .timeout(const Duration(seconds: 20));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data
+          .map((e) => Pedido.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+    throw PedidoException(_mensajeDe(response, 'Error al buscar los pedidos'));
+  }
+
   /// PUT /pedidos/actualizar/:id  -> cambia el estado en la base de datos.
   Future<void> cambiarEstado(int idPedido, String nuevoEstado) async {
     final url = Uri.parse('${ApiConfig.rootUrl}/pedidos/actualizar/$idPedido');

@@ -1,6 +1,6 @@
-import express from 'express'
-import { registrarVenta, comprasPorCliente, comprasPorCedula, listarVentas, ventasPorVendedor, ventaPorId, 
-    ventasPorCedula, borrarVenta, reporteVentas } from "../controller/ventas.js";
+import express from 'express';
+import { registrarVenta, comprasPorCliente, comprasPorCedula, listarVentas, ventasPorVendedor, ventaPorId, ventasPorCedula, borrarVenta } from "../controller/ventas.js";
+import { reporteVentas, reporteVentasExcel } from "../controller/gestioncontable.js";
 import { verificarToken, verificarRol } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -23,8 +23,11 @@ router.get("/cliente/:id_cliente",verificarToken,verificarRol("Admin"),comprasPo
 // Buscar compras por cédula
 router.get("/cedula/:cedula",verificarToken,verificarRol("Admin"),comprasPorCedula);
 
-// verificar reportes contables 
+// reporte contable (JSON)
 router.get("/reporte",verificarToken,verificarRol("Admin"),reporteVentas);
+
+// reporte contable descargable en Excel (.xlsx)  -- debe ir ANTES de "/:id"
+router.get("/reporte/excel",verificarToken,verificarRol("Admin"),reporteVentasExcel);
 
 // Ver una venta específica
 router.get("/:id",verificarToken,verificarRol("Admin"),ventaPorId);

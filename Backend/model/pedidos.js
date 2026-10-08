@@ -106,3 +106,27 @@ export const obtenerClientesPorIds = async (ids) => {
         .select("id, cedula, nombre, apellido, telefono, correo")
         .in("id", ids);
 };
+
+// Pedidos de un cliente (por cédula) con el mismo detalle que /resumen
+export const obtenerPedidosConDetallePorCedula = async (cedula) => {
+    const { data: usuario, error: errorUsuario } = await supabase
+        .from("usuarios")
+        .select("id")
+        .eq("cedula", cedula)
+        .maybeSingle();
+
+    if (errorUsuario) return { data: null, error: errorUsuario };
+    if (!usuario) return { data: [], error: null }; // cédula sin cliente
+
+    return await supabase
+        .from("pedidos")
+        .select(`
+            *,
+            detalle_pedido (
+                id, id_producto, cantidad, precio_unitario, subtotal,
+                productos ( id, nombre, descripcion, foto )
+            )
+        `)
+        .eq("id_cliente", usuario.id)
+        .order("fecha", { ascending: false });
+};

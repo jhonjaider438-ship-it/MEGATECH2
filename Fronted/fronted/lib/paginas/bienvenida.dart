@@ -93,7 +93,7 @@ class _BienvenidaState extends State<Bienvenida> {
                   BotonDegradado(
                     texto: 'Explorar tienda',
                     onTap: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => Homeclie()),
                       );
