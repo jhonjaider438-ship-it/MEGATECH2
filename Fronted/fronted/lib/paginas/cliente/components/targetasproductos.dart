@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/model/pedidos.dart' show formatearPesos;
 import 'package:fronted/model/productos.dart';
-import 'package:fronted/paginas/admin/widets.dart/targetapedido.dart'
+import 'package:fronted/paginas/admin/widets.dart/pedido/targetapedido.dart'
     show FotoCuadrada;
 import 'package:google_fonts/google_fonts.dart';
 

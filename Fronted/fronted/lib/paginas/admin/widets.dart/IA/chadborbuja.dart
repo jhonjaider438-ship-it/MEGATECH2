@@ -3,6 +3,8 @@
 // Componente reutilizable, mismo estilo que Targetas (bordes redondeados,
 // paleta AppColors, GoogleFonts.poppins).
 
+// ESTA EL LA BORBUJA DE CHAD EN LA QUE RESPONDE LA INTELIGENCIA ARTIFICIAL
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fronted/colores/stilocolores.dart';

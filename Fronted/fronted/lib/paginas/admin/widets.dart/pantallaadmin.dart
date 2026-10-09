@@ -3,6 +3,8 @@ import 'package:fronted/components/login/fondo.dart';
 import 'package:fronted/paginas/admin/widets.dart/barranavega.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ESTA ES LA ESTRUCTURA BASICA DE LAS PNATALLAS DE ADMIN
+
 /// Estructura común de las pantallas del admin:
 /// fondo + barra inferior (volver) + "Megatech 2" + título + contenido.
 /// [onVolver] es opcional; por defecto regresa al inicio (primera ruta).
@@ -26,7 +28,8 @@ class PantallaAdmin extends StatelessWidget {
           BotonNav(
             icon: Icons.arrow_back,
             size: 26,
-            onTap: onVolver ??
+            onTap:
+                onVolver ??
                 () => Navigator.popUntil(context, (route) => route.isFirst),
           ),
         ],
@@ -36,7 +39,10 @@ class PantallaAdmin extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 36,
+                  vertical: 20,
+                ),
                 child: Text(
                   'Megatech 2',
                   style: GoogleFonts.poppins(

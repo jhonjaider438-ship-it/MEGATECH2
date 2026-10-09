@@ -36,3 +36,11 @@ void mostrarSnack(
       ),
     );
 }
+
+/// Atajo de [mostrarSnack] para errores (borde rojo).
+void mostrarError(BuildContext context, String texto) => mostrarSnack(
+  context,
+  texto,
+  color: Colors.redAccent,
+  icono: Icons.error_outline,
+);

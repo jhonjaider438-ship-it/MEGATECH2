@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/components/login/botonaaccionprincipal.dart';
 import 'package:fronted/components/login/contenedorformulario.dart';
-import 'package:fronted/components/login/fondo.dart';
 import 'package:fronted/components/login/leertexto.dart';
 import 'package:fronted/model/productos.dart';
 import 'package:fronted/model/ventas.dart';
-import 'package:fronted/paginas/admin/widets.dart/barranavega.dart';
-import 'package:fronted/paginas/admin/widets.dart/resumenventa.dart';
-import 'package:fronted/paginas/admin/widets.dart/seelcproducto.dart';
-import 'package:fronted/paginas/admin/widets.dart/targetaitemventa.dart';
+import 'package:fronted/paginas/admin/widets.dart/ventas/botoncontorno.dart';
+import 'package:fronted/paginas/admin/widets.dart/estadocatalogo.dart';
+import 'package:fronted/paginas/admin/widets.dart/ventas/mensajesnack.dart';
+import 'package:fronted/paginas/admin/widets.dart/pantallaadmin.dart';
+import 'package:fronted/paginas/admin/widets.dart/ventas/resumenventa.dart';
+import 'package:fronted/paginas/admin/widets.dart/ventas/seelcproducto.dart';
+import 'package:fronted/paginas/admin/widets.dart/ventas/targetaitemventa.dart';
+import 'package:fronted/paginas/admin/widets.dart/tituloseccion.dart';
 import 'package:fronted/service/ventas.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class Registarventas extends StatefulWidget {
   const Registarventas({super.key});
@@ -89,7 +90,7 @@ class _RegistarventasState extends State<Registarventas> {
   // ---------- Acciones ----------
   Future<void> _elegirProducto(ItemVenta item) async {
     if (_errorProductos != null || _productos.isEmpty) {
-      _aviso(_errorProductos ?? 'No hay productos para mostrar');
+      mostrarSnack(context, _errorProductos ?? 'No hay productos para mostrar');
       return;
     }
     FocusScope.of(context).unfocus();
@@ -116,26 +117,22 @@ class _RegistarventasState extends State<Registarventas> {
     setState(() => _items.removeWhere((i) => i.uid == item.uid));
   }
 
-  void _aviso(String texto) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(texto)));
+  /// Devuelve el mensaje de error si la venta no se puede enviar, o null si es válida.
+  String? _validar() {
+    if (_cedulaCtrl.text.trim().isEmpty) return 'Escribe la cédula del cliente';
+    if (_productosElegidos == 0) return 'Agrega al menos un producto';
+    if (_productosElegidos != _items.length) {
+      return 'Elige un producto en cada tarjeta o elimina las vacías';
+    }
+    return null;
   }
 
   Future<void> _registrar() async {
     if (_enviando) return;
 
-    final cedula = _cedulaCtrl.text.trim();
-    if (cedula.isEmpty) {
-      _aviso('Escribe la cédula del cliente');
-      return;
-    }
-    if (_productosElegidos == 0) {
-      _aviso('Agrega al menos un producto');
-      return;
-    }
-    if (_productosElegidos != _items.length) {
-      _aviso('Elige un producto en cada tarjeta o elimina las vacías');
+    final error = _validar();
+    if (error != null) {
+      mostrarSnack(context, error);
       return;
     }
 
@@ -151,7 +148,7 @@ class _RegistarventasState extends State<Registarventas> {
       }
 
       final venta = await _service.registrarVenta(
-        cedulaCliente: cedula,
+        cedulaCliente: _cedulaCtrl.text.trim(),
         idVendedor: idVendedor,
         items: _items,
       );
@@ -171,7 +168,7 @@ class _RegistarventasState extends State<Registarventas> {
       });
       _cargarProductos();
     } on VentaException catch (e) {
-      if (mounted) _aviso(e.mensaje);
+      if (mounted) mostrarSnack(context, e.mensaje);
     } finally {
       if (mounted) setState(() => _enviando = false);
     }
@@ -180,193 +177,69 @@ class _RegistarventasState extends State<Registarventas> {
   // ---------- UI ----------
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Barranavegacioninferior(
-        botones: [
-          BotonNav(
-            icon: Icons.arrow_back,
-            size: 26,
-            onTap: () {
-              Navigator.popUntil(context, (route) => route.isFirst);
-            },
-          ),
-        ],
-      ),
-      body: Fondo(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
-                child: Center(
-                  child: Text(
-                    'Megatech 2',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+    return PantallaAdmin(
+      titulo: 'Registrar venta',
+      child: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Contenedorformulario(
+              child: Leertexto(
+                label: 'Cédula del cliente',
+                controller: _cedulaCtrl,
+                keyboardType: TextInputType.number,
+                maxLength: 15,
               ),
-              Text(
-                'Registrar venta',
-                style: GoogleFonts.poppins(
-                  color: const Color(0xFF1BC2F0),
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            const SizedBox(height: 22),
+            const TituloSeccion('Productos'),
+            const SizedBox(height: 10),
+            EstadoCatalogo(
+              cargando: _cargandoProductos,
+              error: _errorProductos,
+              onReintentar: _cargarProductos,
+            ),
+            for (int i = 0; i < _items.length; i++) ...[
+              TarjetaItemVenta(
+                numero: i + 1,
+                item: _items[i],
+                onElegirProducto: () => _elegirProducto(_items[i]),
+                onCantidad: (c) => setState(() => _items[i].cantidad = c),
+                onEliminar: _items.length > 1
+                    ? () => _eliminarItem(_items[i])
+                    : null,
               ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: SingleChildScrollView(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Contenedorformulario(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Leertexto(
-                              label: 'Cédula del cliente',
-                              controller: _cedulaCtrl,
-                              keyboardType: TextInputType.number,
-                              maxLength: 15,
-                            ),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 22),
-                      Text(
-                        'Productos',
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      _estadoCatalogo(),
-                      for (int i = 0; i < _items.length; i++) ...[
-                        TarjetaItemVenta(
-                          numero: i + 1,
-                          item: _items[i],
-                          onElegirProducto: () => _elegirProducto(_items[i]),
-                          onCantidad: (c) =>
-                              setState(() => _items[i].cantidad = c),
-                          onEliminar: _items.length > 1
-                              ? () => _eliminarItem(_items[i])
-                              : null,
-                        ),
-                        const SizedBox(height: 14),
-                      ],
-                      Center(
-                        child: OutlinedButton.icon(
-                          onPressed: _agregarItem,
-                          icon: const Icon(Icons.add_circle_outline),
-                          label: Text(
-                            'Agregar otro producto',
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.azulClaro,
-                            side: const BorderSide(
-                              color: AppColors.azulClaro,
-                              width: 1.5,
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 22,
-                              vertical: 12,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 22),
-                      ResumenVenta(
-                        productos: _productosElegidos,
-                        unidades: _unidades,
-                        total: _total,
-                      ),
-                      const SizedBox(height: 20),
-                      Center(
-                        child: Opacity(
-                          opacity: _enviando ? 0.6 : 1,
-                          child: Botonaaccionprincipal(
-                            text: _enviando ? 'Registrando...' : 'Registrar venta',
-                            width: 240,
-                            height: 48,
-                            onTap: _registrar,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              const SizedBox(height: 14),
             ],
-          ),
+            Center(
+              child: BotonContorno(
+                texto: 'Agregar otro producto',
+                onTap: _agregarItem,
+              ),
+            ),
+            const SizedBox(height: 22),
+            ResumenVenta(
+              productos: _productosElegidos,
+              unidades: _unidades,
+              total: _total,
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: Opacity(
+                opacity: _enviando ? 0.6 : 1,
+                child: Botonaaccionprincipal(
+                  text: _enviando ? 'Registrando...' : 'Registrar venta',
+                  width: 240,
+                  height: 48,
+                  onTap: _registrar,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  /// Muestra el estado de la carga del catálogo (cargando / error con reintento).
-  Widget _estadoCatalogo() {
-    if (_cargandoProductos) {
-      return const Padding(
-        padding: EdgeInsets.only(bottom: 14),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 18,
-              height: 18,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: AppColors.azulClaro,
-              ),
-            ),
-            SizedBox(width: 10),
-            Text('Cargando productos...', style: TextStyle(color: Colors.white70)),
-          ],
-        ),
-      );
-    }
-    if (_errorProductos != null) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 14),
-        child: Row(
-          children: [
-            const Icon(Icons.wifi_off_rounded, color: Colors.white54),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                _errorProductos!,
-                style: GoogleFonts.poppins(color: Colors.white70, fontSize: 13),
-              ),
-            ),
-            TextButton(
-              onPressed: _cargarProductos,
-              child: Text(
-                'Reintentar',
-                style: GoogleFonts.poppins(
-                  color: AppColors.azulClaro,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    return const SizedBox.shrink();
   }
 }

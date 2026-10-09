@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// TAREGTAS DE LA ESTADISTICA
+
 /// Tarjeta compacta para mostrar un numero + una etiqueta (el resumen del
 /// dashboard). Mismo color, borde y padding que [Targetas]; la altura se
 /// iguala a la tarjeta vecina con IntrinsicHeight desde homeadmin.dart, no

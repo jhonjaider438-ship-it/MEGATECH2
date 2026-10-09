@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/model/pedidos.dart';
-import 'package:fronted/paginas/admin/widets.dart/targetapedido.dart';
+import 'package:fronted/paginas/admin/widets.dart/pedido/targetapedido.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+
+// ESTA ES LA TARGETA QUE MUESTRA CADA PRODUCTO DEL PEDIDO
 
 /// Un artículo del pedido: foto, nombre, descripción, cantidad × precio y subtotal.
 class TarjetaArticuloPedido extends StatelessWidget {

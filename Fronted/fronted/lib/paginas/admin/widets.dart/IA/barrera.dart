@@ -1,3 +1,5 @@
+// ESTA EN LA BURBUJA DE CHAD EN LA QUE ISCRIBIMOS PARA HABLAR CON LA INTELIGENCIA ATIFICIAL
+
 // lib/paginas/admin/widets.dart/barraentradachat.dart
 
 import 'package:flutter/material.dart';

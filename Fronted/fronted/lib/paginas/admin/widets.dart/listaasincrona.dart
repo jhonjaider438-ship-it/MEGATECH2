@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fronted/colores/stilocolores.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ESTA PANTALLA ES LA QUE DA EL ERROR Y NO SE PUEDN CARGAR
+
 /// Mensaje centrado con icono (vacío / error) y botón "Reintentar" opcional.
 class MensajeEstado extends StatelessWidget {
   final IconData icono;

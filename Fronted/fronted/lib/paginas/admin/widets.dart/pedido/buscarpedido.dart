@@ -8,6 +8,7 @@ class BarraBusquedaCedula extends StatelessWidget {
   final bool hayBusqueda;
   final VoidCallback onBuscar;
   final VoidCallback onLimpiar;
+  final String hintText;
 
   const BarraBusquedaCedula({
     super.key,
@@ -15,6 +16,7 @@ class BarraBusquedaCedula extends StatelessWidget {
     required this.hayBusqueda,
     required this.onBuscar,
     required this.onLimpiar,
+    this.hintText = 'Buscar por cédula del cliente',
   });
 
   @override
@@ -23,7 +25,7 @@ class BarraBusquedaCedula extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: BarraBusqueda(
         controller: controller,
-        hintText: 'Buscar por cédula del cliente',
+        hintText: hintText,
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.search,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],

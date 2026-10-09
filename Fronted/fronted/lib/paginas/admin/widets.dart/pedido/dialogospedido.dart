@@ -3,6 +3,8 @@ import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/model/pedidos.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ESTA ES PRACTICAMENTE TODA LA PANTALLA DE CAMBIAR EL ESTADO DEL PEDIDO
+
 /// Hoja con los estados. Solo el siguiente permitido queda habilitado.
 /// Devuelve el estado elegido, o null si se cierra sin elegir.
 Future<String?> elegirNuevoEstado(BuildContext context, Pedido pedido) {
@@ -133,8 +135,8 @@ class _OpcionEstado extends StatelessWidget {
     final trailing = esActual
         ? 'Actual'
         : habilitado
-            ? 'Disponible'
-            : 'No disponible';
+        ? 'Disponible'
+        : 'No disponible';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),

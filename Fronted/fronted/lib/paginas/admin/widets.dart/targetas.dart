@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// TAREGTAS DEL HOME
+
+
 class Targetas extends StatelessWidget {
   final String titulo;
   final String descripcion;

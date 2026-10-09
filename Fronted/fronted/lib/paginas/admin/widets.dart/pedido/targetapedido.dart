@@ -3,6 +3,8 @@ import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/model/pedidos.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ESTA ES LA TREGTA EN LA QUE SE ONE CADA PEDIDO JUNTO CON SU ESTADO
+
 /// Foto cuadrada con esquinas redondeadas, con cargando y respaldo si falla.
 class FotoCuadrada extends StatelessWidget {
   final String? url;
@@ -136,8 +138,16 @@ class TarjetaPedido extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Flexible(child: EtiquetaEstado(estado: pedido.estado)),
-                        const Spacer(),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: EtiquetaEstado(estado: pedido.estado),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
                         Text(
                           '#${pedido.id}',
                           style: GoogleFonts.poppins(

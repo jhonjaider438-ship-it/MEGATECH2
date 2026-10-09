@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/model/pedidos.dart';
-import 'package:fronted/paginas/admin/widets.dart/targetapedido.dart';
+import 'package:fronted/paginas/admin/widets.dart/pedido/targetapedido.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+// DATOS DEL CLIENTE Y ESTADO DEL PEDIDO
 
 /// Datos del cliente y estado del pedido (parte superior del detalle).
 class TarjetaClientePedido extends StatelessWidget {
@@ -20,7 +22,10 @@ class TarjetaClientePedido extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1F2937),
         borderRadius: BorderRadius.circular(25),
-        border: Border.all(color: EstadoPedido.color(pedido.estado), width: 1.5),
+        border: Border.all(
+          color: EstadoPedido.color(pedido.estado),
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

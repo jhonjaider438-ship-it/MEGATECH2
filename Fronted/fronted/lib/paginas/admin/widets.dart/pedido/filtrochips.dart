@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ESTE ES LOS FILTROS DE LOSPEDIDO DE ENTREGADO POR PAGAR Y ESO
+
 /// Fila de chips de filtro. La opción `null` se muestra como [textoTodos].
 class FiltroChips extends StatelessWidget {
   final List<String?> opciones;

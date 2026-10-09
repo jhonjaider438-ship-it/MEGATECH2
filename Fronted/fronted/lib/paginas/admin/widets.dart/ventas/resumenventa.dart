@@ -5,6 +5,8 @@ import 'package:fronted/model/pedidos.dart' show formatearPesos;
 import 'package:fronted/model/ventas.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ESTE MUESTRA EL RESUEMN DE LA VENTA QUE SE VA A HACER
+
 /// Panel con el resumen de la venta: productos, unidades y total final.
 class ResumenVenta extends StatelessWidget {
   final int productos;

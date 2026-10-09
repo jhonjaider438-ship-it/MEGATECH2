@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/model/pedidos.dart' show formatearPesos;
 import 'package:fronted/model/productos.dart';
-import 'package:fronted/paginas/admin/widets.dart/targetapedido.dart'
+import 'package:fronted/paginas/admin/widets.dart/pedido/targetapedido.dart'
     show FotoCuadrada;
 import 'package:google_fonts/google_fonts.dart';
+
+// ESTA ES LA TAREGTA DE RODUCTOS DE ADMIN
 
 /// Tarjeta de producto para admin/empleado: foto, ID, stock, nombre,
 /// descripción y precio. El borde y la etiqueta de stock cambian de color
@@ -24,10 +26,11 @@ class TarjetaProductoAdmin extends StatelessWidget {
   Color get _colorStock => _agotado
       ? _rojo
       : _bajo
-          ? _naranja
-          : AppColors.azulClaro;
+      ? _naranja
+      : AppColors.azulClaro;
 
-  Color get _colorBorde => (_agotado || _bajo) ? _colorStock : AppColors.bordeTarjeta;
+  Color get _colorBorde =>
+      (_agotado || _bajo) ? _colorStock : AppColors.bordeTarjeta;
 
   @override
   Widget build(BuildContext context) {

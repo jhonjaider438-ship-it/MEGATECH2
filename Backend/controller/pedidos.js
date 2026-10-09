@@ -59,216 +59,114 @@ export const obtenerPorId = async (req, res) => {
 
 export const crear = async (req, res) => {
 
-    const {  id_cliente, productos } = req.body;
+    const { id_cliente, productos } = req.body;
 
-      // VALIDAR QUE EL CLIENTE EXISTA
-
+    // VALIDAR CLIENTE
     if (!id_cliente) {
-        return res.status(400).json({
-            mensaje: "Debe enviar el id del cliente"
-        });
+        return res.status(400).json({ mensaje: "Debe enviar el id del cliente" });
     }
-
 
     const { data: cliente, error: errorCliente } = await supabase
         .from("usuarios")
-        .select("*")
+        .select("id")
         .eq("id", id_cliente)
         .single();
 
-
     if (errorCliente || !cliente) {
-        return res.status(404).json({
-            mensaje: "El cliente no existe"
-        });
+        return res.status(404).json({ mensaje: "El cliente no existe" });
     }
 
-         // VALIDAR PRODUCTOS
-
-    if (!productos || productos.length === 0) {
-        return res.status(400).json({
-            mensaje:"Debe enviar productos"
-        });
-    }   
-
-
-
-    // Validar stock antes de crear pedido
-
-   for (const producto of productos) {
-
-    const { data: productoActual, error } = await supabase
-        .from("productos")
-        .select("*")
-        .eq("id", producto.id_producto)
-        .single();
-
-
-    // 1. VALIDAR QUE EL PRODUCTO EXISTA
-
-    if (error || !productoActual) {
-
-        return res.status(404).json({
-            mensaje: `El producto ${producto.id_producto} no existe`
-        });
-
+    // VALIDAR PRODUCTOS
+    if (!Array.isArray(productos) || productos.length === 0) {
+        return res.status(400).json({ mensaje: "Debe enviar productos" });
     }
 
+    // Validar cada producto y tomar el precio real de la base de datos
+    let totalCalculado = 0;
+    const detalles = [];
 
-    // 2. VALIDAR CANTIDAD
+    for (const item of productos) {
 
-    if (producto.cantidad <= 0) {
+        const cantidad = Number(item.cantidad);
 
-        return res.status(400).json({
-            mensaje: `La cantidad del producto ${producto.id_producto} debe ser mayor que 0`
+        if (!Number.isInteger(cantidad) || cantidad <= 0) {
+            return res.status(400).json({
+                mensaje: `La cantidad del producto ${item.id_producto} debe ser un número entero mayor que 0`
+            });
+        }
+
+        const { data: productoActual, error } = await supabase
+            .from("productos")
+            .select("id, nombre, precio, stock")
+            .eq("id", item.id_producto)
+            .single();
+
+        if (error || !productoActual) {
+            return res.status(404).json({
+                mensaje: `El producto ${item.id_producto} no existe`
+            });
+        }
+
+        if (productoActual.stock < cantidad) {
+            return res.status(400).json({
+                mensaje: `No hay suficiente stock para ${productoActual.nombre}`,
+                stockDisponible: productoActual.stock,
+                cantidadSolicitada: cantidad
+            });
+        }
+
+        const precio = Number(productoActual.precio);
+        const subtotal = precio * cantidad;
+        totalCalculado += subtotal;
+
+        detalles.push({
+            id_producto: productoActual.id,
+            cantidad,
+            precio_unitario: precio,
+            subtotal,
+            _stockActual: productoActual.stock   // solo para descontar después
         });
-
     }
-
-
-    // 3. VALIDAR PRECIO
-
-    if (producto.precio_unitario <= 0) {
-
-        return res.status(400).json({
-            mensaje: `El precio del producto ${producto.id_producto} debe ser mayor que 0`
-        });
-
-    }
-
-
-    // 4. VALIDAR STOCK
-
-    if (productoActual.stock < producto.cantidad) {
-
-        return res.status(400).json({
-            mensaje: `No hay suficiente stock para el producto ${producto.id_producto}`,
-            stockDisponible: productoActual.stock,
-            cantidadSolicitada: producto.cantidad
-        });
-
-    }
-
-}
- 
-
-    // Calcular total
-
-    const totalCalculado = productos.reduce(
-        (total, producto) => 
-            total + (producto.cantidad * producto.precio_unitario),
-        0
-    );
-
-
 
     // Crear pedido
-
     const { data: pedido, error } = await crearPedido({
-
         fecha: new Date(),
-
-        estado: 'Por pagar',
-
+        estado: "Por pagar",
         total: totalCalculado,
-
         id_cliente
-
     });
 
-
-
-    if(error){
+    if (error) {
         return res.status(500).json(error);
     }
 
-
-
     const idPedido = pedido[0].id;
 
+    // Crear detalle (sin el campo auxiliar _stockActual)
+    const { data: detalle, error: errorDetalle } = await crearDetalle(
+        detalles.map(({ _stockActual, ...d }) => ({ id_pedido: idPedido, ...d }))
+    );
 
-
-    // Crear detalle pedido
-
-    const detalles = productos.map(producto => ({
-
-        id_pedido:idPedido,
-
-        id_producto:producto.id_producto,
-
-        cantidad:producto.cantidad,
-
-        precio_unitario:producto.precio_unitario,
-
-        subtotal:producto.cantidad * producto.precio_unitario
-
-    }));
-
-
-
-    const { data: detalle, error:errorDetalle } = await crearDetalle(detalles);
-
-
-
-    if(errorDetalle){
-
+    if (errorDetalle) {
         return res.status(500).json({
-            mensaje:"No se pudo crear el detalle del pedido",
-            error:errorDetalle
+            mensaje: "No se pudo crear el detalle del pedido",
+            error: errorDetalle
         });
-
     }
-
-
 
     // Descontar stock
-
-    for (const producto of productos) {
-
-
-        const { data: productoActual } = await supabase
-            .from("productos")
-            .select("stock")
-            .eq("id", producto.id_producto)
-            .single();
-
-
-
-        const nuevoStock = productoActual.stock - producto.cantidad;
-
-
-
-        await actualizarStock(
-            producto.id_producto,
-            nuevoStock
-        );
-
+    for (const d of detalles) {
+        await actualizarStock(d.id_producto, d._stockActual - d.cantidad);
     }
 
-    const fechaFormateada = new Date(pedido[0].fecha).toLocaleString("es-CO", {
-    timeZone: "America/Bogota",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-});
-
-    const pedidoFormateado = {
-    ...pedido[0],
-    fecha_formateada: formatearFechaBogota(pedido[0].fecha)
-    };
     res.status(201).json({
-
-    mensaje: "Pedido y detalle creados correctamente",
-
-    pedido: pedidoFormateado,
-
-    detalle
-
-});
-
+        mensaje: "Pedido y detalle creados correctamente",
+        pedido: {
+            ...pedido[0],
+            fecha_formateada: formatearFechaBogota(pedido[0].fecha)
+        },
+        detalle
+    });
 };
 
 

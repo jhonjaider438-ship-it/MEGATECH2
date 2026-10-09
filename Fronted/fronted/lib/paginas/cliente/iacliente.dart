@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fronted/components/login/botondevolver.dart';
 import 'package:fronted/components/login/fondo.dart';
-import 'package:fronted/paginas/admin/widets.dart/barrera.dart';
-import 'package:fronted/paginas/admin/widets.dart/chadborbuja.dart';
+import 'package:fronted/paginas/admin/widets.dart/IA/barrera.dart';
+import 'package:fronted/paginas/admin/widets.dart/IA/chadborbuja.dart';
 import 'package:fronted/service/iacliente.dart';
 import 'package:google_fonts/google_fonts.dart';
 

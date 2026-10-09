@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fronted/model/pedidos.dart';
-import 'package:fronted/paginas/admin/widets.dart/dialogospedido.dart';
-import 'package:fronted/paginas/admin/widets.dart/mensajesnack.dart';
-import 'package:fronted/paginas/admin/widets.dart/panelestadopedido.dart';
+import 'package:fronted/paginas/admin/widets.dart/pedido/dialogospedido.dart';
+import 'package:fronted/paginas/admin/widets.dart/ventas/mensajesnack.dart';
+import 'package:fronted/paginas/admin/widets.dart/pedido/panelestadopedido.dart';
 import 'package:fronted/paginas/admin/widets.dart/pantallaadmin.dart';
-import 'package:fronted/paginas/admin/widets.dart/targetaarticulopedido.dart';
-import 'package:fronted/paginas/admin/widets.dart/tragetaclientepedido.dart';
+import 'package:fronted/paginas/admin/widets.dart/pedido/targetaarticulopedido.dart';
+import 'package:fronted/paginas/admin/widets.dart/pedido/tragetaclientepedido.dart';
 import 'package:fronted/service/pedidos.dart';
 import 'package:google_fonts/google_fonts.dart';
 

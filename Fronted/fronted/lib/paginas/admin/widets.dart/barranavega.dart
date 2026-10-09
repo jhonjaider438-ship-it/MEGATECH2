@@ -1,4 +1,7 @@
+// ESTE ES LA BARRA DE NAVEGACION INFERIOR QUE SE VE EN CADA PANTALLA
+
 import 'package:flutter/material.dart';
+
 class BotonNav {
   final IconData icon;
   final double size;
@@ -6,6 +9,7 @@ class BotonNav {
 
   const BotonNav({required this.icon, this.size = 26, this.onTap});
 }
+
 class Barranavegacioninferior extends StatelessWidget {
   final List<BotonNav> botones;
   final double espacioEntreBotones;

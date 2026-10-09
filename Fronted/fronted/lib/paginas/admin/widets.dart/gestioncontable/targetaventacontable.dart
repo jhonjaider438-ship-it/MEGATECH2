@@ -3,6 +3,8 @@ import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/model/gestioncontable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// TAREGTA DONDE SE MUESTRAN LA VENTAS ECHAS
+
 /// Tarjeta desplegable de una venta con sus productos.
 class TarjetaVentaContable extends StatelessWidget {
   final VentaContable venta;

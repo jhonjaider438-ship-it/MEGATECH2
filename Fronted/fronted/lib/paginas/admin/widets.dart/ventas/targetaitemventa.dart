@@ -3,8 +3,11 @@ import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/model/pedidos.dart' show formatearPesos;
 import 'package:fronted/model/productos.dart';
 import 'package:fronted/model/ventas.dart';
-import 'package:fronted/paginas/admin/widets.dart/seelcproducto.dart';
+import 'package:fronted/paginas/admin/widets.dart/ventas/seelcproducto.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+// ESTO ES LO QUE APARECE CUANDO SELECCIONA UN PRODUCTO
+// PARA QUE SELECCONE SU CANTIDAD O ELIMINAR SI REQUIERE Y CALCULA TOTALES
 
 /// Tarjeta de un producto dentro de la venta: selector de producto,
 /// cantidad y subtotal de esa línea.

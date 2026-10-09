@@ -4,6 +4,8 @@ import 'package:fronted/model/pedidos.dart' show formatearPesos;
 import 'package:fronted/model/productos.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// LOS PRODUCTOS QUE APARECEN EN EL SELECTOR PATRA SELECIONAROS EN LA VENTA
+
 /// Miniatura de un producto (con placeholder si no hay foto o falla).
 class FotoProducto extends StatelessWidget {
   final String? url;
@@ -91,7 +93,9 @@ class _SelectorProductoState extends State<_SelectorProducto> {
     final lista = _filtrados;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: Container(
         height: alto,
         decoration: BoxDecoration(
@@ -174,8 +178,8 @@ class _SelectorProductoState extends State<_SelectorProducto> {
     final etiqueta = agotado
         ? 'Agotado'
         : yaAgregado
-            ? 'Ya agregado'
-            : null;
+        ? 'Ya agregado'
+        : null;
 
     return Opacity(
       opacity: deshabilitado ? 0.45 : 1,

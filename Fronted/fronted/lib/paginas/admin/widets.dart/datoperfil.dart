@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fronted/colores/stilocolores.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// ESTOS SON LOS CAMPOS DONDE SE MUESTRAN LOS DATOSDE LOS USUARIOS
+
 class Datoperfil extends StatelessWidget {
   final String etiqueta;
   final String valor;

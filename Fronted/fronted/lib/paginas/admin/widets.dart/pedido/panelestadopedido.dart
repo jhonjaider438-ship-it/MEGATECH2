@@ -3,6 +3,10 @@ import 'package:fronted/colores/stilocolores.dart';
 import 'package:fronted/model/pedidos.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
+// ESTE ES EL PANEL DE ESTADO DE PEDIDO
+
+
 /// Total final + botón para cambiar el estado, siempre visibles al final.
 class PanelEstadoPedido extends StatelessWidget {
   final Pedido pedido;
